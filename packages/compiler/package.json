@@ -1,0 +1,12 @@
+{
+  "name": "@cadenza/compiler",
+  "version": "0.1.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "dev": "ts-node src/index.ts",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "packageManager": "yarn@3.5.1"
+}

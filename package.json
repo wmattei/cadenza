@@ -1,4 +1,21 @@
 {
   "name": "cadenza",
-  "packageManager": "yarn@4.6.0"
+  "version": "0.0.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "examples/*"
+  ],
+  "packageManager": "yarn@3.5.1",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.21",
+    "ts-node": "^10.9.2",
+    "turbo": "^2.5.3",
+    "typescript": "^5.8.3"
+  }
 }
