@@ -7,6 +7,7 @@ export interface LambdaTaskOptions {
 export function lambdaTask(options: LambdaTaskOptions = {}) {
   return function (target: any, key: string, descriptor: PropertyDescriptor) {
     const ctor = target.constructor;
+
     MetadataRegistry.registerTask({
       workflowClass: ctor,
       kind: "lambda",

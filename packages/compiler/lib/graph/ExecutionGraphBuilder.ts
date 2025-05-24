@@ -2,12 +2,14 @@ import { CadenzaWorkflow, MetadataRegistry } from "@cadenza/core";
 import { ExecutionGraph, ExecutionNode } from "../model";
 
 export class ExecutionGraphBuilder {
-  constructor(private workflow: new (...args: any[]) => CadenzaWorkflow<any>) {}
+  constructor(private workflow: Function) {}
 
   build(): ExecutionGraph {
     const tasks = MetadataRegistry.getTasksForWorkflow(
-      this.workflow.constructor
+      this.workflow
     );
+
+    console.info(tasks);
 
     // TODO use this with ts-morph
     const runMethod = this.workflow.prototype.run;

@@ -7,7 +7,7 @@ export class CadenzaCompiler {
   constructor(private emitter: StateMachineEmitter) {}
 
   compile(
-    WorkflowClass: new (...args: any[]) => CadenzaWorkflow<any>,
+    WorkflowClass: Function,
     scope: Construct
   ) {
     const graph = new ExecutionGraphBuilder(WorkflowClass).build();

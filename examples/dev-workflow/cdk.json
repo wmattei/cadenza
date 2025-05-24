@@ -1,0 +1,4 @@
+{
+  "quiet": true,
+  "app": "npx ts-node --prefer-ts-exts bin/cdk.ts"
+}

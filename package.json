@@ -10,10 +10,12 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint"
+    "lint": "turbo run lint",
+    "synth": "turbo run synth"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
+    "aws-cdk": "2",
     "tsx": "^4.19.4",
     "turbo": "^2.5.3",
     "typescript": "^5.8.3"
