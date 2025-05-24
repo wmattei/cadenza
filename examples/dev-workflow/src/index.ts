@@ -18,4 +18,4 @@ export class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
   }
 }
 
-// devRun(HelloWorkflow, { name: "World" }, { debugState: true });
+devRun(HelloWorkflow, { name: "World" }, { debugState: true });

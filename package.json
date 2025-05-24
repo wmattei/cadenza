@@ -11,7 +11,8 @@
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
-    "synth": "turbo run synth"
+    "synth": "turbo run synth",
+    "test": "turbo run test"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",

@@ -1,4 +1,4 @@
-interface TaskMetadata {
+export interface TaskMetadata {
   name: string;
   fn: Function;
   kind: "lambda" | "fargate" | "transition";

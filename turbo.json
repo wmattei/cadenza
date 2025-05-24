@@ -11,6 +11,9 @@
     },
     "lint": {},
     "typecheck": {},
+    "test": {
+      "dependsOn": ["^build"]
+    },
     "synth": {
       "dependsOn": ["^build"],
       "outputs": ["cdk.out/**"]

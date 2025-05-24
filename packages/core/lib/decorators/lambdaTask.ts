@@ -4,14 +4,16 @@ export interface LambdaTaskOptions {
   // TODO
 }
 
-export function lambdaTask(options: LambdaTaskOptions = {}) {
-  return function (target: any, key: string, descriptor: PropertyDescriptor) {
-    const ctor = target.constructor;
+export function lambdaTask(options: LambdaTaskOptions = {}): MethodDecorator {
+  return function (target, propertyKey, descriptor) {
+    if (!descriptor || typeof descriptor.value !== "function") {
+      throw new Error(`@lambdaTask must be used on a method.`);
+    }
 
     MetadataRegistry.registerTask({
-      workflowClass: ctor,
+      workflowClass: target.constructor,
       kind: "lambda",
-      name: key,
+      name: propertyKey.toString(),
       fn: descriptor.value,
       options,
     });
