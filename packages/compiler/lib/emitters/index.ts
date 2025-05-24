@@ -1,2 +1,2 @@
-export * from "./StateMachineEmitter";
-export * from "./StepFunctionsEmitter";
+export * from "./node-emitter";
+export * from "./step-functions-emitter";

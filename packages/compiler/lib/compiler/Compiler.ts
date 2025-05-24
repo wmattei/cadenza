@@ -1,16 +1,25 @@
 import { Construct } from "constructs";
-import { StateMachineEmitter } from "../emitters";
 import { ExecutionGraphBuilder } from "../graph";
-import { CadenzaWorkflow } from "@cadenza/core";
+import { NodeEmitter, StepFunctionsEmitter } from "../emitters";
+import {
+  NodeEmitterRegistry,
+  registerDefaultEmitters,
+} from "../emitters/node-emitter-registry";
 
 export class CadenzaCompiler {
-  constructor(private emitter: StateMachineEmitter) {}
+  constructor(private emittersOverride?: Record<string, NodeEmitter>) {}
 
-  compile(
-    WorkflowClass: Function,
-    scope: Construct
-  ) {
+  compile(scope: Construct, WorkflowClass: Function) {
     const graph = new ExecutionGraphBuilder(WorkflowClass).build();
-    return this.emitter.emit(graph, scope);
+    const emitter = new StepFunctionsEmitter();
+
+    registerDefaultEmitters();
+    if (this.emittersOverride) {
+      for (const [kind, emitter] of Object.entries(this.emittersOverride)) {
+        NodeEmitterRegistry.register(kind, emitter);
+      }
+    }
+
+    return emitter.emit(scope, graph);
   }
 }

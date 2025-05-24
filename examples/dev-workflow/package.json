@@ -10,7 +10,8 @@
     "synth": "cdk synth"
   },
   "dependencies": {
-    "@cadenza/core": "workspace:^"
+    "@cadenza/core": "workspace:^",
+    "@cadenza/cdk": "workspace:^"
   },
   "packageManager": "yarn@3.5.1"
 }
