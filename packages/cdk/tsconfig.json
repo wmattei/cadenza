@@ -2,13 +2,10 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "outDir": "./dist",
-    "rootDir": "./src",
+    "rootDir": "./lib",
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
   }
 }

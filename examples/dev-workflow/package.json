@@ -4,9 +4,12 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "dev": "ts-node src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cadenza/core": "workspace:^"
   },
   "packageManager": "yarn@3.5.1"
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@cadenza/core",
+  "name": "@cadenza/cdk",
   "version": "0.1.0",
   "main": "dist/index.js",
   "scripts": {
@@ -8,5 +8,8 @@
     "lint": "eslint . --ext .ts",
     "typecheck": "tsc --noEmit"
   },
-  "packageManager": "yarn@3.5.1"
+  "packageManager": "yarn@3.5.1",
+  "dependencies": {
+    "@cadenza/compiler": "workspace:^"
+  }
 }

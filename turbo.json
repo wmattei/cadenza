@@ -6,7 +6,9 @@
       "dependsOn": ["^build"],
       "outputs": ["dist/**"]
     },
-    "dev": {},
+    "dev": {
+      "dependsOn": ["^build"]
+    },
     "lint": {},
     "typecheck": {}
   }
