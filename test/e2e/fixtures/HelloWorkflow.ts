@@ -1,4 +1,4 @@
-import { CadenzaWorkflow, lambda } from "@cadenza/core";
+import { CadenzaWorkflow, lambda } from '@cadenza/core';
 
 export class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
   @lambda()

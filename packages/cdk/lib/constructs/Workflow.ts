@@ -1,5 +1,5 @@
-import { CadenzaCompiler, NodeEmitter } from "@cadenza/compiler";
-import { Construct } from "constructs";
+import { CadenzaCompiler, NodeEmitter } from '@cadenza/compiler';
+import { Construct } from 'constructs';
 
 export interface WorkflowProps {
   /**

@@ -1,13 +1,10 @@
-import * as sfn from "aws-cdk-lib/aws-stepfunctions";
-import { Construct } from "constructs";
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
+import { Construct } from 'constructs';
 
-import { ExecutionGraph } from "../types";
+import { ExecutionGraph } from '../types';
 
-import {
-  NodeEmitterRegistry,
-  registerDefaultEmitters,
-} from "./node-emitter-registry";
-import { NodeEmitter } from "./node-emitter";
+import { NodeEmitterRegistry, registerDefaultEmitters } from './node-emitter-registry';
+import { NodeEmitter } from './node-emitter';
 
 export class StepFunctionsEmitter {
   constructor(private emittersOverride?: Record<string, NodeEmitter>) {
@@ -30,9 +27,7 @@ export class StepFunctionsEmitter {
 
       for (const parentId of node.dependsOn) {
         if (!states[parentId]) {
-          throw new Error(
-            `Dependency "${parentId}" for task "${node.id}" not found`
-          );
+          throw new Error(`Dependency "${parentId}" for task "${node.id}" not found`);
         }
 
         // Only call .next() once per parent
@@ -43,10 +38,8 @@ export class StepFunctionsEmitter {
       }
     }
 
-    const rootNode = graph.nodes.find(
-      (n) => !n.dependsOn || n.dependsOn.length === 0
-    );
-    if (!rootNode) throw new Error("No root node found");
+    const rootNode = graph.nodes.find((n) => !n.dependsOn || n.dependsOn.length === 0);
+    if (!rootNode) throw new Error('No root node found');
 
     const definition = states[rootNode.id];
 

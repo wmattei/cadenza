@@ -1,5 +1,5 @@
-import { MetadataRegistry } from "../metadata";
-import { merge } from "../utils/lodashis";
+import { MetadataRegistry } from '../metadata';
+import { merge } from '../utils/lodashis';
 
 export interface LambdaTaskOptions {
   /**
@@ -29,7 +29,7 @@ export interface LambdaTaskOptions {
 
 export function lambda(options: LambdaTaskOptions = {}): MethodDecorator {
   return function (target, propertyKey, descriptor) {
-    if (!descriptor || typeof descriptor.value !== "function") {
+    if (!descriptor || typeof descriptor.value !== 'function') {
       throw new Error(`@lambda must be used on a method.`);
     }
 
@@ -42,7 +42,7 @@ export function lambda(options: LambdaTaskOptions = {}): MethodDecorator {
 
     MetadataRegistry.registerTask({
       workflowClass: target.constructor,
-      kind: "lambda",
+      kind: 'lambda',
       name: propertyKey.toString(),
       options: merge(defaultLambdaOptions, options),
     });

@@ -1,7 +1,7 @@
-import { Construct } from "constructs";
+import { Construct } from 'constructs';
 
-import { NodeEmitter, StepFunctionsEmitter } from "../emitters";
-import { ExecutionGraphBuilder } from "../graph";
+import { NodeEmitter, StepFunctionsEmitter } from '../emitters';
+import { ExecutionGraphBuilder } from '../graph';
 
 export class CadenzaCompiler {
   constructor(private emittersOverride?: Record<string, NodeEmitter>) {}

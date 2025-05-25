@@ -1,4 +1,4 @@
-export type ExecutionNodeKind = "lambda" | "fargate";
+export type ExecutionNodeKind = 'lambda' | 'fargate';
 
 export type ExecutionNode = {
   id: string;

@@ -1,7 +1,7 @@
-import { Block, Statement, SyntaxKind } from "ts-morph";
+import { Block, Statement, SyntaxKind } from 'ts-morph';
 
-import { ExecutionNode } from "../../types";
-import { AnalyzerContext, CallAnalyzer } from "../analyzers/call-analyzer";
+import { ExecutionNode } from '../../types';
+import { AnalyzerContext, CallAnalyzer } from '../analyzers/call-analyzer';
 
 export class BlockVisitor {
   private nodes: ExecutionNode[] = [];
@@ -25,7 +25,7 @@ export class BlockVisitor {
 
     const result = this.callAnalyzer.analyze(call);
 
-    if (result?.type === "decoratedMethod") {
+    if (result?.type === 'decoratedMethod') {
       this.nodes.push({
         id: result.name,
         dependsOn: this.lastTaskId ? [this.lastTaskId] : [],
@@ -35,7 +35,7 @@ export class BlockVisitor {
       this.lastTaskId = result.name;
     }
 
-    if (result?.type === "method") {
+    if (result?.type === 'method') {
       this.visit(result.bodyBlock as Block);
     }
   }

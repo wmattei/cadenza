@@ -1,26 +1,16 @@
-const tseslint = require("typescript-eslint");
-const noOnlyTests = require("eslint-plugin-no-only-tests");
-const importPlugin = require("eslint-plugin-import");
-const unusedImports = require("eslint-plugin-unused-imports");
+const tseslint = require('typescript-eslint');
+const noOnlyTests = require('eslint-plugin-no-only-tests');
+const importPlugin = require('eslint-plugin-import');
+const unusedImports = require('eslint-plugin-unused-imports');
 
 /**
  * List of packages or apps
  */
-const workspaces = [
-  "packages/core",
-  "packages/compiler",
-  "packages/cdk",
-  "examples/dev-workflow",
-];
+const workspaces = ['packages/core', 'packages/compiler', 'packages/cdk', 'examples/dev-workflow'];
 
 module.exports = tseslint.config(
   {
-    ignores: [
-      "**/dist/**",
-      "**/cdk.out/**",
-      "**/node_modules/**",
-      "eslint.config.cjs",
-    ],
+    ignores: ['**/dist/**', '**/cdk.out/**', '**/node_modules/**', 'eslint.config.cjs'],
   },
   tseslint.configs.recommended,
   // js.configs.recommended,
@@ -30,7 +20,7 @@ module.exports = tseslint.config(
       parser: tseslint.parser,
       parserOptions: {
         project: [`./${pkg}/tsconfig.json`],
-        sourceType: "module",
+        sourceType: 'module',
       },
       globals: {
         __dirname: true,
@@ -48,34 +38,27 @@ module.exports = tseslint.config(
       },
     },
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
-      "no-only-tests": noOnlyTests,
+      '@typescript-eslint': tseslint.plugin,
+      'no-only-tests': noOnlyTests,
       import: importPlugin,
-      "unused-imports": unusedImports,
+      'unused-imports': unusedImports,
     },
     rules: {
-      "no-console": ["warn", { allow: ["info", "warn", "error"] }],
-      "no-only-tests/no-only-tests": "error",
-      "unused-imports/no-unused-imports": "error",
-      "import/order": [
-        "warn",
+      'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
+      'no-only-tests/no-only-tests': 'error',
+      'unused-imports/no-unused-imports': 'error',
+      'import/order': [
+        'warn',
         {
-          groups: [
-            "builtin",
-            "external",
-            "internal",
-            "parent",
-            "sibling",
-            "index",
-          ],
-          "newlines-between": "always",
+          groups: ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
+          'newlines-between': 'always',
         },
       ],
-      "@typescript-eslint/explicit-module-boundary-types": "off",
-      "@typescript-eslint/no-unused-vars": [
-        "error",
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+      '@typescript-eslint/no-unused-vars': [
+        'error',
         {
-          argsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
           ignoreRestSiblings: true,
         },
       ],
@@ -84,33 +67,33 @@ module.exports = tseslint.config(
 
   // tests
   {
-    files: ["test/**/*.ts"],
+    files: ['test/**/*.ts'],
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: ["./tsconfig.json"],
-        sourceType: "module",
+        project: ['./tsconfig.json'],
+        sourceType: 'module',
       },
     },
     plugins: {
-      "@typescript-eslint": tseslint.plugin,
-      "no-only-tests": noOnlyTests,
+      '@typescript-eslint': tseslint.plugin,
+      'no-only-tests': noOnlyTests,
       import: importPlugin,
-      "unused-imports": unusedImports,
+      'unused-imports': unusedImports,
     },
     rules: {
-      "no-only-tests/no-only-tests": "error",
-      "@typescript-eslint/no-unused-vars": [
-        "warn",
+      'no-only-tests/no-only-tests': 'error',
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
         {
-          argsIgnorePattern: "^_",
-          varsIgnorePattern: "^_",
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
           ignoreRestSiblings: true,
           // 👇 This is key:
-          caughtErrors: "none",
+          caughtErrors: 'none',
         },
       ],
-      "unused-imports/no-unused-imports": "error",
+      'unused-imports/no-unused-imports': 'error',
     },
   },
 );

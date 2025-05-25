@@ -27,7 +27,7 @@ Cadenza is guided by a few core principles:
 ## Example
 
 ```typescript
-import { CadenzaWorkflow, lambdaTask } from "@cadenza/core";
+import { CadenzaWorkflow, lambdaTask } from '@cadenza/core';
 
 class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
   @lambdaTask()

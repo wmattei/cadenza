@@ -1,11 +1,11 @@
-import { NodeEmitter } from "./node-emitter";
-import { LambdaNodeEmitter } from "./node-emitters/lambda-node-emitter";
-import { PassNodeEmitter } from "./node-emitters/pass-node-emitter";
+import { NodeEmitter } from './node-emitter';
+import { LambdaNodeEmitter } from './node-emitters/lambda-node-emitter';
+import { PassNodeEmitter } from './node-emitters/pass-node-emitter';
 
 export function registerDefaultEmitters() {
-  NodeEmitterRegistry.register("lambda", new LambdaNodeEmitter());
+  NodeEmitterRegistry.register('lambda', new LambdaNodeEmitter());
   //   NodeEmitterRegistry.register("fargate", new FargateNodeEmitter());
-  NodeEmitterRegistry.register("transition", new PassNodeEmitter());
+  NodeEmitterRegistry.register('transition', new PassNodeEmitter());
 }
 
 export class NodeEmitterRegistry {
@@ -17,8 +17,7 @@ export class NodeEmitterRegistry {
 
   static get(kind: string): NodeEmitter {
     const emitter = this.emitters.get(kind);
-    if (!emitter)
-      throw new Error(`No NodeEmitter registered for kind: ${kind}`);
+    if (!emitter) throw new Error(`No NodeEmitter registered for kind: ${kind}`);
     return emitter;
   }
 

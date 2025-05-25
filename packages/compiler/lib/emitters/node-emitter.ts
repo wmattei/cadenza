@@ -1,7 +1,7 @@
-import { IChainable, INextable } from "aws-cdk-lib/aws-stepfunctions";
-import { Construct } from "constructs";
+import { IChainable, INextable } from 'aws-cdk-lib/aws-stepfunctions';
+import { Construct } from 'constructs';
 
-import { ExecutionNode } from "../types";
+import { ExecutionNode } from '../types';
 
 export interface NodeEmitter {
   emit(scope: Construct, node: ExecutionNode): INextable & IChainable;

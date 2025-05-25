@@ -1,12 +1,12 @@
-import { join } from "path";
+import { join } from 'path';
 
-import { MetadataRegistry } from "@cadenza/core";
-import { Block, Project } from "ts-morph";
+import { MetadataRegistry } from '@cadenza/core';
+import { Block, Project } from 'ts-morph';
 
-import { ExecutionGraph } from "../types";
+import { ExecutionGraph } from '../types';
 
-import { BlockVisitor } from "./visitors/block-visitor";
-import { BuildError, printBuildError } from "./error";
+import { BlockVisitor } from './visitors/block-visitor';
+import { BuildError, printBuildError } from './error';
 
 export class ExecutionGraphBuilder {
   constructor(private entry: string) {
@@ -15,7 +15,7 @@ export class ExecutionGraphBuilder {
   }
 
   build(): ExecutionGraph {
-    const project = new Project({ tsConfigFilePath: "tsconfig.json" });
+    const project = new Project({ tsConfigFilePath: 'tsconfig.json' });
     const sourceFile = project.getSourceFileOrThrow(this.entry);
 
     const classDecl = sourceFile.getClasses()[0]; // TODO search by name or other criteria
@@ -26,8 +26,8 @@ export class ExecutionGraphBuilder {
     const className = classDecl.getNameOrThrow();
     const registeredTasks = MetadataRegistry.getTasksForWorkflow(className);
 
-    const workflowClass = sourceFile.getClassOrThrow("HelloWorkflow");
-    const runMethod = workflowClass.getMethodOrThrow("run");
+    const workflowClass = sourceFile.getClassOrThrow('HelloWorkflow');
+    const runMethod = workflowClass.getMethodOrThrow('run');
     const body = runMethod.getBodyOrThrow() as Block;
 
     const visitor = new BlockVisitor({

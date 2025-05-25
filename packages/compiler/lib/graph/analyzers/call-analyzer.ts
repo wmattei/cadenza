@@ -1,18 +1,13 @@
-import { TaskMetadata } from "@cadenza/core";
-import {
-  CallExpression,
-  ClassDeclaration,
-  MethodDeclaration,
-  Node,
-} from "ts-morph";
+import { TaskMetadata } from '@cadenza/core';
+import { CallExpression, ClassDeclaration, MethodDeclaration, Node } from 'ts-morph';
 
-import { BuildError } from "../error";
+import { BuildError } from '../error';
 
 export interface AnalysisResult {
-  type: "decoratedMethod" | "method";
+  type: 'decoratedMethod' | 'method';
   name: string;
   body: string;
-  kind?: "lambda" | "fargate";
+  kind?: 'lambda' | 'fargate';
   bodyBlock?: Node;
   meta?: TaskMetadata;
 }
@@ -28,7 +23,7 @@ export class CallAnalyzer {
   analyze(call: CallExpression): null | AnalysisResult {
     const expr = call.getExpression();
     if (!Node.isPropertyAccessExpression(expr)) return null;
-    if (expr.getExpression().getText() !== "this") return null;
+    if (expr.getExpression().getText() !== 'this') return null;
 
     const methodName = expr.getName();
 
@@ -36,10 +31,10 @@ export class CallAnalyzer {
       const meta = this.context.taskRegistry.get(methodName)!;
       const method = this.context.classDecl.getMethod(methodName)!;
 
-      const body = method?.getBodyText() ?? "";
+      const body = method?.getBodyText() ?? '';
       this.validateMethodBody(body, method, meta);
       return {
-        type: "decoratedMethod",
+        type: 'decoratedMethod',
         name: methodName,
         body: body,
         kind: meta.kind,
@@ -50,9 +45,9 @@ export class CallAnalyzer {
     const method = this.context.classDecl.getMethod(methodName);
     if (method) {
       return {
-        type: "method",
+        type: 'method',
         name: methodName,
-        body: method.getBodyText() ?? "",
+        body: method.getBodyText() ?? '',
         bodyBlock: method.getBodyOrThrow(),
       };
     }
@@ -61,11 +56,7 @@ export class CallAnalyzer {
   }
 
   // TODO custom validation for decorators
-  private validateMethodBody(
-    body: string,
-    method: MethodDeclaration,
-    _meta: TaskMetadata
-  ) {
+  private validateMethodBody(body: string, method: MethodDeclaration, _meta: TaskMetadata) {
     if (!body) {
       const line = method.getNameNode().getStartLineNumber();
       const column = method.getNameNode().getStartLinePos();
@@ -75,7 +66,7 @@ export class CallAnalyzer {
         line + 1,
         column + 1,
         method.getText(),
-        "Decorated tasks must contain a body with logic. Did you forget to implement it?"
+        'Decorated tasks must contain a body with logic. Did you forget to implement it?',
       );
     }
   }
