@@ -1,4 +1,4 @@
-export abstract class WorkflowBase<TInput = any> {
+export abstract class WorkflowBase<TInput = object> {
   public state: TInput = {} as TInput;
   constructor(devInput?: TInput) {
     this.state = devInput || ({} as TInput);

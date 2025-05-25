@@ -6,7 +6,7 @@ import { MetadataRegistry } from "../../lib/metadata";
 
 describe("@lambda decorator", () => {
   beforeEach(() => {
-    (MetadataRegistry as any).taskMap.clear();
+    MetadataRegistry.clear();
   });
 
   it("should register lambda tasks with metadata", () => {

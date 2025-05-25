@@ -3,7 +3,9 @@ export type TaskMetadataKind = "lambda" | "fargate";
 export interface TaskMetadata {
   name: string;
   kind: TaskMetadataKind;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   workflowClass: Function;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: Record<string, any>;
 }
 
@@ -20,5 +22,9 @@ export class MetadataRegistry {
 
   static getTasksForWorkflow(clsName: string): Map<string, TaskMetadata> {
     return this.taskMap.get(clsName) ?? new Map<string, TaskMetadata>();
+  }
+
+  static clear() {
+    this.taskMap.clear();
   }
 }

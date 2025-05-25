@@ -13,7 +13,7 @@ export interface AnalysisResult {
   name: string;
   body: string;
   kind?: "lambda" | "fargate";
-  bodyBlock?: any;
+  bodyBlock?: Node;
   meta?: TaskMetadata;
 }
 

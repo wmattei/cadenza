@@ -1,4 +1,3 @@
-const js = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const noOnlyTests = require("eslint-plugin-no-only-tests");
 const importPlugin = require("eslint-plugin-import");
@@ -16,9 +15,14 @@ const workspaces = [
 
 module.exports = tseslint.config(
   {
-    ignores: ["**/dist/**", "**/cdk.out/**", "**/node_modules/**"],
+    ignores: [
+      "**/dist/**",
+      "**/cdk.out/**",
+      "**/node_modules/**",
+      "eslint.config.cjs",
+    ],
   },
-  // tseslint.configs.recommended,
+  tseslint.configs.recommended,
   // js.configs.recommended,
   workspaces.map((pkg) => ({
     files: [`./${pkg}/**/*.ts`],
@@ -108,5 +112,5 @@ module.exports = tseslint.config(
       ],
       "unused-imports/no-unused-imports": "error",
     },
-  }
+  },
 );

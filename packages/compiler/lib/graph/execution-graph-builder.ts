@@ -10,6 +10,7 @@ import { BuildError, printBuildError } from "./error";
 
 export class ExecutionGraphBuilder {
   constructor(private entry: string) {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     require(join(process.cwd(), entry)); // Ensure the workflow entry is loaded so that the metadata is registered
   }
 

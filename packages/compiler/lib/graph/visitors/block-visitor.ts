@@ -36,7 +36,7 @@ export class BlockVisitor {
     }
 
     if (result?.type === "method") {
-      this.visit(result.bodyBlock);
+      this.visit(result.bodyBlock as Block);
     }
   }
 }
