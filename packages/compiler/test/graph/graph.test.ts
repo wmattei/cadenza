@@ -3,8 +3,8 @@ import { ExecutionGraphBuilder } from "../../lib/graph";
 import { deepStrictEqual, strictEqual } from "assert";
 import { MetadataRegistry } from "@cadenza/core";
 
-describe.only("ExecutionGraphBuilder", () => {
-  it.only("builds a graph from HelloWorkflow", () => {
+describe("ExecutionGraphBuilder", () => {
+  it("builds a graph from HelloWorkflow", () => {
     // Manually simulate decorator calls (since we're not running decorators at compile time)
     MetadataRegistry.registerTask({
       workflowClass: { name: "HelloWorkflow" } as any,
