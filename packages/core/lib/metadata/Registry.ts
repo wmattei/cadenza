@@ -1,20 +1,25 @@
+export type TaskMetadataKind = "lambda" | "fargate";
+
 export interface TaskMetadata {
   name: string;
   fn: Function;
-  kind: "lambda" | "fargate" | "transition";
+  kind: TaskMetadataKind;
   options: Record<string, any>;
   workflowClass: Function;
 }
 
 export class MetadataRegistry {
-  private static taskMap = new Map<Function, TaskMetadata[]>();
+  private static taskMap = new Map<string, Map<string, TaskMetadata>>();
 
   static registerTask(task: TaskMetadata) {
-    const existing = this.taskMap.get(task.workflowClass) ?? [];
-    this.taskMap.set(task.workflowClass, [...existing, task]);
+    const existing =
+      this.taskMap.get(task.workflowClass.name) ||
+      new Map<string, TaskMetadata>();
+    existing.set(task.name, task);
+    this.taskMap.set(task.workflowClass.name, existing);
   }
 
-  static getTasksForWorkflow(cls: Function): TaskMetadata[] {
-    return this.taskMap.get(cls) ?? [];
+  static getTasksForWorkflow(clsName: string): Map<string, TaskMetadata> {
+    return this.taskMap.get(clsName) ?? new Map<string, TaskMetadata>();
   }
 }

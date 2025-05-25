@@ -1,9 +1,9 @@
-export type TaskKind = "lambda" | "fargate" | "transition";
+export type ExecutionNodeKind = "lambda" | "fargate";
 
 export interface ExecutionNode {
   id: string;
-  kind: TaskKind;
-  method: Function;
+  kind: ExecutionNodeKind;
+  code: string;
   dependsOn: string[];
 }
 

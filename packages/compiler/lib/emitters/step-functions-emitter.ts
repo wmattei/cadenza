@@ -1,8 +1,7 @@
-import { Resource } from "aws-cdk-lib";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
-import { ExecutionGraph } from "../model/ExecutionNode";
 import { NodeEmitterRegistry } from "./node-emitter-registry";
+import { ExecutionGraph } from "../types";
 
 export class StepFunctionsEmitter {
   emit(scope: Construct, graph: ExecutionGraph): sfn.StateMachine {

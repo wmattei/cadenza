@@ -1,25 +1,60 @@
 import { MetadataRegistry } from "@cadenza/core";
-import { ExecutionGraph, ExecutionNode } from "../model";
+import { ExecutionGraph, ExecutionNode } from "../types";
+import { Block, Node, Project, SyntaxKind } from "ts-morph";
 
 export class ExecutionGraphBuilder {
-  constructor(private workflow: Function) {}
+  constructor(private entry: string) {}
 
   build(): ExecutionGraph {
-    const tasks = MetadataRegistry.getTasksForWorkflow(this.workflow);
+    const project = new Project({ tsConfigFilePath: "tsconfig.json" });
+    const sourceFile = project.getSourceFileOrThrow(this.entry);
 
-    // TODO use this with ts-morph
-    const runMethod = this.workflow.prototype.run;
+    const classDecl = sourceFile.getClasses()[0]; // TODO search by name or other criteria
+    if (!classDecl) {
+      throw new Error(`No class found in source file ${this.entry}`);
+    }
 
-    const nodes: ExecutionNode[] = tasks.map((task) => ({
-      id: task.name,
-      kind: task.kind,
-      method: task.fn,
-      dependsOn: [],
-    }));
+    const className = classDecl.getNameOrThrow();
+    const registeredTasks = MetadataRegistry.getTasksForWorkflow(className);
 
+    const workflowClass = sourceFile.getClassOrThrow("HelloWorkflow");
+    const runMethod = workflowClass.getMethodOrThrow("run");
+    const body = runMethod.getBodyOrThrow() as Block;
+    const statements = body.getStatements();
+
+    const graph: ExecutionNode[] = [];
+
+    let lastTaskId: string | null = null;
+
+    for (const stmt of statements) {
+      const call = stmt.getFirstDescendantByKind(SyntaxKind.CallExpression);
+      if (!call) continue;
+
+      const expr = call.getExpression();
+
+      if (
+        Node.isPropertyAccessExpression(expr) &&
+        expr.getExpression().getText() === "this"
+      ) {
+        const taskName = expr.getName();
+        
+        if (registeredTasks.has(taskName)) {
+          const taskMeta = registeredTasks.get(taskName)!;
+
+          graph.push({
+            id: taskName,
+            dependsOn: lastTaskId ? [lastTaskId] : [],
+            code: taskMeta.fn.toString(),
+            kind: taskMeta.kind,
+          });
+
+          lastTaskId = taskName;
+        }
+      }
+    }
     return {
-      workflowName: this.workflow.name,
-      nodes,
+      workflowName: className,
+      nodes: graph,
     };
   }
 }

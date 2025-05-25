@@ -12,7 +12,8 @@
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "synth": "turbo run synth",
-    "test": "turbo run test"
+    "test": "turbo run test",
+    "test:watch": "turbo run test:watch"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
@@ -24,6 +25,7 @@
   "dependencies": {
     "aws-cdk-lib": "^2.198.0",
     "chalk": "^5.4.1",
-    "constructs": "^10.4.2"
+    "constructs": "^10.4.2",
+    "ts-morph": "^26.0.0"
   }
 }

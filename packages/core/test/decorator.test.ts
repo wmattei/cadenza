@@ -1,4 +1,4 @@
-import { deepStrictEqual, strictEqual } from "assert";
+import { deepEqual, deepStrictEqual, strictEqual } from "assert";
 import { beforeEach, describe, it } from "node:test";
 import { lambdaTask } from "../lib/decorators";
 import { MetadataRegistry } from "../lib/metadata";
@@ -14,12 +14,17 @@ describe("lambdaTask decorator and MetadataRegistry", () => {
       @lambdaTask() cleanup() {}
     }
 
-    const tasks = MetadataRegistry.getTasksForWorkflow(SampleWorkflow);
+    const tasks = MetadataRegistry.getTasksForWorkflow(SampleWorkflow.name);
 
-    strictEqual(tasks.length, 2);
-    deepStrictEqual(tasks.map((t) => t.name).sort(), ["cleanup", "process"]);
-    strictEqual(tasks[0].kind, "lambda");
-    strictEqual(typeof tasks[0].fn, "function");
+    const tasksArray = Array.from(tasks.values());
+
+    strictEqual(tasksArray.length, 2);
+    deepStrictEqual(tasksArray.map((t) => t.name).sort(), [
+      "cleanup",
+      "process",
+    ]);
+    strictEqual(tasksArray[0].kind, "lambda");
+    strictEqual(typeof tasksArray[0].fn, "function");
   });
 
   it("Should register metadata in isolation", () => {
@@ -29,13 +34,13 @@ describe("lambdaTask decorator and MetadataRegistry", () => {
     class B {
       @lambdaTask() two() {}
     }
-    strictEqual(MetadataRegistry.getTasksForWorkflow(A).length, 1);
-    strictEqual(MetadataRegistry.getTasksForWorkflow(B).length, 1);
+    strictEqual(MetadataRegistry.getTasksForWorkflow(A.name).size, 1);
+    strictEqual(MetadataRegistry.getTasksForWorkflow(B.name).size, 1);
   });
 
   it("should return an empty array if no tasks registered", () => {
     class EmptyWorkflow {}
-    const tasks = MetadataRegistry.getTasksForWorkflow(EmptyWorkflow);
-    deepStrictEqual(tasks, []);
+    const tasks = MetadataRegistry.getTasksForWorkflow(EmptyWorkflow.name);
+    deepEqual(tasks.size, 0);
   });
 });

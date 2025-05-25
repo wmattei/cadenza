@@ -4,9 +4,9 @@ import { Construct } from "constructs";
 
 export interface WorkflowProps {
   /**
-   * The workflow class to compile and deploy.
+   * The entry point of the workflow.
    */
-  workflowClass: new (...args: any[]) => CadenzaWorkflow<any>;
+  workflowEntry: string;
 
   /**
    * Optional map of emitters to override the default behavior.
@@ -32,7 +32,7 @@ export class Workflow extends Construct {
   constructor(scope: Construct, id: string, props: WorkflowProps) {
     super(scope, id);
 
-    const compiler = new CadenzaCompiler();
-    compiler.compile(this, props.workflowClass);
+    const compiler = new CadenzaCompiler(props.emittersOverride);
+    compiler.compile(this, props.workflowEntry);
   }
 }

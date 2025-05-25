@@ -9,17 +9,24 @@ import {
 export class CadenzaCompiler {
   constructor(private emittersOverride?: Record<string, NodeEmitter>) {}
 
-  compile(scope: Construct, WorkflowClass: Function) {
-    const graph = new ExecutionGraphBuilder(WorkflowClass).build();
+  compile(scope: Construct, workflowEntry: string) {
+    const graph = new ExecutionGraphBuilder(workflowEntry).build();
+
+    // TODO output the graph for debugging purposes. JSON or DOT format?
+
     const emitter = new StepFunctionsEmitter();
 
     registerDefaultEmitters();
+    this.registerCustomEmitters();
+
+    return emitter.emit(scope, graph);
+  }
+
+  private registerCustomEmitters() {
     if (this.emittersOverride) {
       for (const [kind, emitter] of Object.entries(this.emittersOverride)) {
         NodeEmitterRegistry.register(kind, emitter);
       }
     }
-
-    return emitter.emit(scope, graph);
   }
 }
