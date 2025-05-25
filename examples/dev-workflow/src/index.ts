@@ -1,12 +1,12 @@
-import { CadenzaWorkflow, lambdaTask } from "@cadenza/core";
+import { CadenzaWorkflow, lambda } from "@cadenza/core";
 
 export class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
-  @lambdaTask()
+  @lambda()
   async sayHello(name: string): Promise<string> {
     return `Hello, ${name}!`;
   }
 
-  @lambdaTask()
+  @lambda()
   async sayGoodbye(name: string): Promise<string> {
     return `Goodbye, ${name}!`;
   }

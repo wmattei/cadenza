@@ -6,7 +6,11 @@ import { Construct } from "constructs";
 import { describe, it } from "node:test";
 import { NodeEmitter, StepFunctionsEmitter } from "../../lib";
 import { NodeEmitterRegistry } from "../../lib/emitters/node-emitter-registry";
-import { ExecutionNode, ExecutionNodeKind } from "../../lib/types";
+import {
+  ExecutionGraph,
+  ExecutionNode,
+  ExecutionNodeKind,
+} from "../../lib/types";
 
 // Dummy emitter just to mock out real Lambda tasks
 class MockLambdaNodeEmitter implements NodeEmitter {
@@ -24,20 +28,20 @@ describe("StepFunctionsEmitter", () => {
     NodeEmitterRegistry.register("lambda", new MockLambdaNodeEmitter());
     // registerDefaultEmitters();
 
-    const graph = {
+    const graph: ExecutionGraph = {
       workflowName: "TestWorkflow",
       nodes: [
         {
           id: "taskA",
           kind: "lambda" as ExecutionNodeKind,
-          method: () => {},
           dependsOn: [],
+          data: {},
         },
         {
           id: "taskB",
           kind: "lambda" as ExecutionNodeKind,
-          method: () => {},
           dependsOn: ["taskA"],
+          data: {},
         },
       ],
     };

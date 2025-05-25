@@ -7,6 +7,7 @@ export interface AnalysisResult {
   body: string;
   kind?: "lambda" | "fargate";
   bodyBlock?: any;
+  meta?: TaskMetadata;
 }
 
 export interface AnalyzerContext {
@@ -32,6 +33,7 @@ export class CallAnalyzer {
         name: methodName,
         body: method?.getBodyText() ?? "",
         kind: meta.kind,
+        meta,
       };
     }
 

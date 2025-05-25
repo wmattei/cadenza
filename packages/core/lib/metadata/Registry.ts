@@ -3,8 +3,8 @@ export type TaskMetadataKind = "lambda" | "fargate";
 export interface TaskMetadata {
   name: string;
   kind: TaskMetadataKind;
-  options: Record<string, any>;
   workflowClass: Function;
+  options: Record<string, any>;
 }
 
 export class MetadataRegistry {

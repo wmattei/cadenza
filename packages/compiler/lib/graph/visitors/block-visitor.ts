@@ -28,7 +28,7 @@ export class BlockVisitor {
       this.nodes.push({
         id: result.name,
         dependsOn: this.lastTaskId ? [this.lastTaskId] : [],
-        code: result.body,
+        data: { code: result.body, ...(result.meta?.options || {}) },
         kind: result.kind!,
       });
       this.lastTaskId = result.name;

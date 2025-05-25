@@ -1,9 +1,18 @@
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
-import { NodeEmitterRegistry } from "./node-emitter-registry";
 import { ExecutionGraph } from "../types";
+import {
+  NodeEmitterRegistry,
+  registerDefaultEmitters,
+} from "./node-emitter-registry";
+import { NodeEmitter } from "./node-emitter";
 
 export class StepFunctionsEmitter {
+  constructor(private emittersOverride?: Record<string, NodeEmitter>) {
+    registerDefaultEmitters();
+    this.registerCustomEmitters();
+  }
+
   emit(scope: Construct, graph: ExecutionGraph): sfn.StateMachine {
     const states: Record<string, sfn.INextable & sfn.IChainable> = {};
 
@@ -42,5 +51,13 @@ export class StepFunctionsEmitter {
     return new sfn.StateMachine(scope, graph.workflowName, {
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
     });
+  }
+
+  private registerCustomEmitters() {
+    if (this.emittersOverride) {
+      for (const [kind, emitter] of Object.entries(this.emittersOverride)) {
+        NodeEmitterRegistry.register(kind, emitter);
+      }
+    }
   }
 }

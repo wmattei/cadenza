@@ -1,13 +1,13 @@
 export type ExecutionNodeKind = "lambda" | "fargate";
 
-export interface ExecutionNode {
+export type ExecutionNode = {
   id: string;
   kind: ExecutionNodeKind;
   dependsOn: string[];
-  code?: string;
-}
+  data: Record<string, any>;
+};
 
-export interface ExecutionGraph {
+export type ExecutionGraph = {
   workflowName: string;
   nodes: ExecutionNode[];
-}
+};

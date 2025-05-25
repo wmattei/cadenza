@@ -10,6 +10,10 @@ const WORKFLOWS = [
     name: "HelloWorkflow",
     entry: "test/e2e/fixtures/HelloWorkflow.ts",
   },
+  {
+    name: "LambdaWithOptions",
+    entry: "test/e2e/fixtures/LambdaWithOptions.ts",
+  },
 ];
 
 const SNAPSHOT_DIR = join(__dirname, "__snapshots__");

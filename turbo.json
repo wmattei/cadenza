@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "ui": "tui",
   "globalDependencies": [],
   "tasks": {
     "build": {
@@ -12,10 +13,10 @@
     "lint": {},
     "typecheck": {},
     "test": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "build"]
     },
     "test:watch": {
-      "dependsOn": ["^build"]
+      "dependsOn": ["^build", "build"]
     },
     "synth": {
       "dependsOn": ["^build"],

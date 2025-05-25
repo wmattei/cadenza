@@ -1,6 +1,6 @@
 {
   "Resources": {
-    "HelloWorkflowsayHelloLambdaServiceRole2F450822": {
+    "LambdaWithOptionssayHelloLambdaServiceRole267242E1": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -31,82 +31,30 @@
         ]
       }
     },
-    "HelloWorkflowsayHelloLambda131364A7": {
+    "LambdaWithOptionssayHelloLambdaC2712BAC": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "ZipFile": "return `Hello, ${name}`;"
         },
+        "Description": "A simple lambda function that greets a user by name",
         "FunctionName": "sayHello",
         "Handler": "index.handler",
         "MemorySize": 128,
         "Role": {
           "Fn::GetAtt": [
-            "HelloWorkflowsayHelloLambdaServiceRole2F450822",
+            "LambdaWithOptionssayHelloLambdaServiceRole267242E1",
             "Arn"
           ]
         },
         "Runtime": "nodejs20.x",
-        "Timeout": 30000
+        "Timeout": 5
       },
       "DependsOn": [
-        "HelloWorkflowsayHelloLambdaServiceRole2F450822"
+        "LambdaWithOptionssayHelloLambdaServiceRole267242E1"
       ]
     },
-    "HelloWorkflowsayGoodbyeLambdaServiceRole1B78FB93": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Action": "sts:AssumeRole",
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "lambda.amazonaws.com"
-              }
-            }
-          ],
-          "Version": "2012-10-17"
-        },
-        "ManagedPolicyArns": [
-          {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-              ]
-            ]
-          }
-        ]
-      }
-    },
-    "HelloWorkflowsayGoodbyeLambda0AB04863": {
-      "Type": "AWS::Lambda::Function",
-      "Properties": {
-        "Code": {
-          "ZipFile": "return `Goodbye, ${name}`;"
-        },
-        "FunctionName": "sayGoodbye",
-        "Handler": "index.handler",
-        "MemorySize": 128,
-        "Role": {
-          "Fn::GetAtt": [
-            "HelloWorkflowsayGoodbyeLambdaServiceRole1B78FB93",
-            "Arn"
-          ]
-        },
-        "Runtime": "nodejs20.x",
-        "Timeout": 30000
-      },
-      "DependsOn": [
-        "HelloWorkflowsayGoodbyeLambdaServiceRole1B78FB93"
-      ]
-    },
-    "HelloWorkflowRoleA25ED20D": {
+    "LambdaWithOptionsHelloWorkflowRole44EBE198": {
       "Type": "AWS::IAM::Role",
       "Properties": {
         "AssumeRolePolicyDocument": {
@@ -123,7 +71,7 @@
         }
       }
     },
-    "HelloWorkflowRoleDefaultPolicy386F5D69": {
+    "LambdaWithOptionsHelloWorkflowRoleDefaultPolicyD69F5648": {
       "Type": "AWS::IAM::Policy",
       "Properties": {
         "PolicyDocument": {
@@ -134,7 +82,7 @@
               "Resource": [
                 {
                   "Fn::GetAtt": [
-                    "HelloWorkflowsayHelloLambda131364A7",
+                    "LambdaWithOptionssayHelloLambdaC2712BAC",
                     "Arn"
                   ]
                 },
@@ -144,33 +92,7 @@
                     [
                       {
                         "Fn::GetAtt": [
-                          "HelloWorkflowsayHelloLambda131364A7",
-                          "Arn"
-                        ]
-                      },
-                      ":*"
-                    ]
-                  ]
-                }
-              ]
-            },
-            {
-              "Action": "lambda:InvokeFunction",
-              "Effect": "Allow",
-              "Resource": [
-                {
-                  "Fn::GetAtt": [
-                    "HelloWorkflowsayGoodbyeLambda0AB04863",
-                    "Arn"
-                  ]
-                },
-                {
-                  "Fn::Join": [
-                    "",
-                    [
-                      {
-                        "Fn::GetAtt": [
-                          "HelloWorkflowsayGoodbyeLambda0AB04863",
+                          "LambdaWithOptionssayHelloLambdaC2712BAC",
                           "Arn"
                         ]
                       },
@@ -183,40 +105,29 @@
           ],
           "Version": "2012-10-17"
         },
-        "PolicyName": "HelloWorkflowRoleDefaultPolicy386F5D69",
+        "PolicyName": "LambdaWithOptionsHelloWorkflowRoleDefaultPolicyD69F5648",
         "Roles": [
           {
-            "Ref": "HelloWorkflowRoleA25ED20D"
+            "Ref": "LambdaWithOptionsHelloWorkflowRole44EBE198"
           }
         ]
       }
     },
-    "HelloWorkflowF5EFFB5B": {
+    "LambdaWithOptionsHelloWorkflowEF774C47": {
       "Type": "AWS::StepFunctions::StateMachine",
       "Properties": {
         "DefinitionString": {
           "Fn::Join": [
             "",
             [
-              "{\"StartAt\":\"sayHello\",\"States\":{\"sayHello\":{\"Next\":\"sayGoodbye\",\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"InputPath\":\"$\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
+              "{\"StartAt\":\"sayHello\",\"States\":{\"sayHello\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"InputPath\":\"$\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
               {
                 "Ref": "AWS::Partition"
               },
               ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
               {
                 "Fn::GetAtt": [
-                  "HelloWorkflowsayHelloLambda131364A7",
-                  "Arn"
-                ]
-              },
-              "\",\"Payload.$\":\"$\"}},\"sayGoodbye\":{\"End\":true,\"Retry\":[{\"ErrorEquals\":[\"Lambda.ClientExecutionTimeoutException\",\"Lambda.ServiceException\",\"Lambda.AWSLambdaException\",\"Lambda.SdkClientException\"],\"IntervalSeconds\":2,\"MaxAttempts\":6,\"BackoffRate\":2}],\"Type\":\"Task\",\"InputPath\":\"$\",\"OutputPath\":\"$.Payload\",\"Resource\":\"arn:",
-              {
-                "Ref": "AWS::Partition"
-              },
-              ":states:::lambda:invoke\",\"Parameters\":{\"FunctionName\":\"",
-              {
-                "Fn::GetAtt": [
-                  "HelloWorkflowsayGoodbyeLambda0AB04863",
+                  "LambdaWithOptionssayHelloLambdaC2712BAC",
                   "Arn"
                 ]
               },
@@ -226,14 +137,14 @@
         },
         "RoleArn": {
           "Fn::GetAtt": [
-            "HelloWorkflowRoleA25ED20D",
+            "LambdaWithOptionsHelloWorkflowRole44EBE198",
             "Arn"
           ]
         }
       },
       "DependsOn": [
-        "HelloWorkflowRoleDefaultPolicy386F5D69",
-        "HelloWorkflowRoleA25ED20D"
+        "LambdaWithOptionsHelloWorkflowRoleDefaultPolicyD69F5648",
+        "LambdaWithOptionsHelloWorkflowRole44EBE198"
       ],
       "UpdateReplacePolicy": "Delete",
       "DeletionPolicy": "Delete"

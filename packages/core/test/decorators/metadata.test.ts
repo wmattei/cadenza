@@ -1,9 +1,9 @@
 import { deepEqual, deepStrictEqual, strictEqual } from "assert";
 import { beforeEach, describe, it } from "node:test";
-import { lambda } from "../lib/decorators";
-import { MetadataRegistry } from "../lib/metadata";
+import { lambda } from "../../lib/decorators";
+import { MetadataRegistry } from "../../lib/metadata";
 
-describe("lambdaTask decorator and MetadataRegistry", () => {
+describe("decorator and MetadataRegistry", () => {
   beforeEach(() => {
     (MetadataRegistry as any).taskMap.clear();
   });
