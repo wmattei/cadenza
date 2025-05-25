@@ -1,5 +1,4 @@
 import { CadenzaCompiler, NodeEmitter } from "@cadenza/compiler";
-import { CadenzaWorkflow } from "@cadenza/core";
 import { Construct } from "constructs";
 
 export interface WorkflowProps {

@@ -1,5 +1,6 @@
 import { strictEqual } from "assert";
 import { beforeEach, describe, it } from "node:test";
+
 import { lambda } from "../../lib/decorators";
 import { MetadataRegistry } from "../../lib/metadata";
 

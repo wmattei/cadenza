@@ -2,6 +2,7 @@ import { Duration } from "aws-cdk-lib";
 import { Code, Function, Runtime } from "aws-cdk-lib/aws-lambda";
 import { LambdaInvoke } from "aws-cdk-lib/aws-stepfunctions-tasks";
 import { Construct } from "constructs";
+
 import { ExecutionNode } from "../../types";
 import { NodeEmitter } from "../node-emitter";
 

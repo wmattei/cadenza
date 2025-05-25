@@ -1,7 +1,7 @@
 import { Workflow } from "@cadenza/cdk"; // your construct
 import { App, Stack } from "aws-cdk-lib";
 import { join } from "node:path";
-import { beforeEach, describe, it, snapshot } from "node:test";
+import { describe, it, snapshot } from "node:test";
 
 const WORKFLOWS = [
   {
@@ -15,7 +15,9 @@ const WORKFLOWS = [
 ];
 
 describe("E2E: CDK output", () => {
-  snapshot.setResolveSnapshotPath((path) => join(__dirname, "__snapshots__", "workflow.test.ts.snapshot"));
+  snapshot.setResolveSnapshotPath(() =>
+    join(__dirname, "__snapshots__", "workflow.test.ts.snapshot")
+  );
   for (const workflow of WORKFLOWS) {
     describe(`Workflow: ${workflow.name}`, () => {
       it("matches the expected output snapshot", (t) => {

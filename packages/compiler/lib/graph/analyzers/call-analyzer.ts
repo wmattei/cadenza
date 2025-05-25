@@ -5,6 +5,7 @@ import {
   MethodDeclaration,
   Node,
 } from "ts-morph";
+
 import { BuildError } from "../error";
 
 export interface AnalysisResult {
@@ -63,7 +64,7 @@ export class CallAnalyzer {
   private validateMethodBody(
     body: string,
     method: MethodDeclaration,
-    meta: TaskMetadata
+    _meta: TaskMetadata
   ) {
     if (!body) {
       const line = method.getNameNode().getStartLineNumber();

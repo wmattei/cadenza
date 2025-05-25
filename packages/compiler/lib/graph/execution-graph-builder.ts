@@ -1,7 +1,10 @@
-import { MetadataRegistry } from "@cadenza/core";
 import { join } from "path";
+
+import { MetadataRegistry } from "@cadenza/core";
 import { Block, Project } from "ts-morph";
+
 import { ExecutionGraph } from "../types";
+
 import { BlockVisitor } from "./visitors/block-visitor";
 import { BuildError, printBuildError } from "./error";
 

@@ -10,7 +10,7 @@
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
-    "lint": "turbo run lint",
+    "lint": "eslint . --ext .ts",
     "synth": "turbo run synth",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
@@ -19,10 +19,19 @@
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
+    "@typescript-eslint/eslint-plugin": "^8.32.1",
+    "@typescript-eslint/parser": "^8.32.1",
     "aws-cdk": "2",
+    "eslint": "^9.27.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-no-only-tests": "^3.3.0",
+    "eslint-plugin-prettier": "^5.4.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier": "^3.5.3",
     "tsx": "^4.19.4",
     "turbo": "^2.5.3",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.32.1"
   },
   "dependencies": {
     "aws-cdk-lib": "^2.198.0",

@@ -1,9 +1,9 @@
-import { deepStrictEqual, fail, ok, strictEqual, throws } from "assert";
+import { deepStrictEqual, strictEqual, throws } from "assert";
 import { describe, it } from "node:test";
-import { ExecutionGraphBuilder } from "../../lib/graph";
-import { BuildError } from "../../lib/graph/error";
 
-describe.only("ExecutionGraphBuilder", () => {
+import { ExecutionGraphBuilder } from "../../lib/graph";
+
+describe("ExecutionGraphBuilder", () => {
   it("builds a graph from HelloWorkflow", () => {
     const graph = new ExecutionGraphBuilder(
       "test/graph/fixtures/HelloWorkflow.ts"
@@ -19,7 +19,7 @@ describe.only("ExecutionGraphBuilder", () => {
     deepStrictEqual(sayGoodbye?.dependsOn, ["sayHello"]);
   });
 
-  it.only("should throw an error when decorated methods are not implemented ", () => {
+  it("should throw an error when decorated methods are not implemented ", () => {
     throws(() => {
       new ExecutionGraphBuilder(
         "test/graph/fixtures/NotImplementedHelloWorkflow.ts"

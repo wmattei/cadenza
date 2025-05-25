@@ -1,6 +1,8 @@
+import { describe, it } from "node:test";
+
 import { Stack } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
-import { describe, it } from "node:test";
+
 import { LambdaNodeEmitter } from "../../lib/emitters/node-emitters/lambda-node-emitter";
 import { ExecutionNodeKind } from "../../lib/types";
 

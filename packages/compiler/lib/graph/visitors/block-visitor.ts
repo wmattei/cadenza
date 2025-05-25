@@ -1,4 +1,5 @@
-import { Block, ClassDeclaration, Statement, SyntaxKind } from "ts-morph";
+import { Block, Statement, SyntaxKind } from "ts-morph";
+
 import { ExecutionNode } from "../../types";
 import { AnalyzerContext, CallAnalyzer } from "../analyzers/call-analyzer";
 

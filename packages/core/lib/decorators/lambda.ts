@@ -1,4 +1,4 @@
-import { MetadataRegistry, TaskMetadata } from "../metadata";
+import { MetadataRegistry } from "../metadata";
 import { merge } from "../utils/lodashis";
 
 export interface LambdaTaskOptions {

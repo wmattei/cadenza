@@ -1,4 +1,5 @@
 import chalk from "chalk";
+
 import { WorkflowBase } from "./WorkflowBase";
 
 export interface DevRunOptions {
@@ -24,24 +25,24 @@ export interface DevRunOptions {
 export async function devRun<TInput>(
   Workflow: new (input: TInput) => WorkflowBase<TInput>,
   input: TInput,
-  options: DevRunOptions = {}
+  options: DevRunOptions = {},
 ): Promise<void> {
   const { debugState = false } = options;
 
-  console.log(chalk.magenta("\n=== 🧪 Running Cadenza Workflow ==="));
+  console.info(chalk.magenta("\n=== 🧪 Running Cadenza Workflow ==="));
 
   const wf = new Workflow(input);
 
   if (debugState) {
-    console.log(chalk.cyan("▶ Initial state:"), input);
+    console.info(chalk.cyan("▶ Initial state:"), input);
   }
 
   await wf.run();
 
   if (debugState) {
     const final = wf.state;
-    console.log(chalk.green("✅ Final state:"), final);
+    console.info(chalk.green("✅ Final state:"), final);
   }
 
-  console.log(chalk.magenta("=== 🏁 Done ===\n"));
+  console.info(chalk.magenta("=== 🏁 Done ===\n"));
 }

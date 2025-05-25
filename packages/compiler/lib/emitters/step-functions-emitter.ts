@@ -1,6 +1,8 @@
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
+
 import { ExecutionGraph } from "../types";
+
 import {
   NodeEmitterRegistry,
   registerDefaultEmitters,
