@@ -13,7 +13,8 @@
     "lint": "turbo run lint",
     "synth": "turbo run synth",
     "test": "turbo run test",
-    "test:watch": "turbo run test:watch"
+    "test:watch": "turbo run test:watch",
+    "test:e2e": "node --require tsx --test ./test/**/*.test.ts"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",

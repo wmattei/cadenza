@@ -5,11 +5,13 @@ import {
   NodeEmitterRegistry,
   registerDefaultEmitters,
 } from "../emitters/node-emitter-registry";
+import { join } from "path";
 
 export class CadenzaCompiler {
   constructor(private emittersOverride?: Record<string, NodeEmitter>) {}
 
   compile(scope: Construct, workflowEntry: string) {
+    require(join(process.cwd(), workflowEntry)); // Ensure the workflow entry is loaded so that the metadata is registered
     const graph = new ExecutionGraphBuilder(workflowEntry).build();
 
     // TODO output the graph for debugging purposes. JSON or DOT format?

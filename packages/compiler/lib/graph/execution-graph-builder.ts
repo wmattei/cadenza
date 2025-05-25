@@ -37,14 +37,24 @@ export class ExecutionGraphBuilder {
         expr.getExpression().getText() === "this"
       ) {
         const taskName = expr.getName();
-        
+
         if (registeredTasks.has(taskName)) {
           const taskMeta = registeredTasks.get(taskName)!;
+          const methodDecl = workflowClass.getMethod(taskName);
+
+          if (!methodDecl) {
+            throw new Error(`Method ${taskName} not found in workflow class`);
+          }
+
+          const body = methodDecl.getBodyText();
+          if (!body) {
+            throw new Error(`Method ${taskName} has no body`);
+          }
 
           graph.push({
             id: taskName,
             dependsOn: lastTaskId ? [lastTaskId] : [],
-            code: taskMeta.fn.toString(),
+            code: body,
             kind: taskMeta.kind,
           });
 

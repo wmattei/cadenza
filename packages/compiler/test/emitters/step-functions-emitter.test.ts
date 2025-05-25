@@ -18,8 +18,8 @@ class MockLambdaNodeEmitter implements NodeEmitter {
   }
 }
 
-describe.only("StepFunctionsEmitter", () => {
-  it.only("emits a state machine from a simple graph", () => {
+describe("StepFunctionsEmitter", () => {
+  it("emits a state machine from a simple graph", () => {
     // Setup
     const stack = new Stack();
     const emitter = new StepFunctionsEmitter();

@@ -8,7 +8,7 @@ export class LambdaNodeEmitter implements NodeEmitter {
   emit(scope: Construct, node: ExecutionNode) {
     const fn = new Function(scope, `${node.id}Lambda`, {
       runtime: Runtime.NODEJS_20_X,
-      code: Code.fromAsset(`src/functions/${node.id}`),
+      code: Code.fromInline(node.code!),
       handler: "index.handler",
     });
 
