@@ -4,8 +4,8 @@ import { describe, it } from "node:test";
 import { LambdaNodeEmitter } from "../../lib/emitters/node-emitters/lambda-node-emitter";
 import { ExecutionNodeKind } from "../../lib/types";
 
-describe.only("LambdaNodeEmitter", () => {
-  it.only("emits a lambda function", () => {
+describe("LambdaNodeEmitter", () => {
+  it("emits a lambda function", () => {
     const stack = new Stack();
 
     new LambdaNodeEmitter().emit(stack, {

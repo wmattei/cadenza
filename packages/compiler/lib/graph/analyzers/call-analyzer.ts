@@ -1,5 +1,11 @@
 import { TaskMetadata } from "@cadenza/core";
-import { CallExpression, ClassDeclaration, Node } from "ts-morph";
+import {
+  CallExpression,
+  ClassDeclaration,
+  MethodDeclaration,
+  Node,
+} from "ts-morph";
+import { BuildError } from "../error";
 
 export interface AnalysisResult {
   type: "decoratedMethod" | "method";
@@ -27,11 +33,14 @@ export class CallAnalyzer {
 
     if (this.context.taskRegistry.has(methodName)) {
       const meta = this.context.taskRegistry.get(methodName)!;
-      const method = this.context.classDecl.getMethod(methodName);
+      const method = this.context.classDecl.getMethod(methodName)!;
+
+      const body = method?.getBodyText() ?? "";
+      this.validateMethodBody(body, method, meta);
       return {
         type: "decoratedMethod",
         name: methodName,
-        body: method?.getBodyText() ?? "",
+        body: body,
         kind: meta.kind,
         meta,
       };
@@ -48,5 +57,25 @@ export class CallAnalyzer {
     }
 
     return null;
+  }
+
+  // TODO custom validation for decorators
+  private validateMethodBody(
+    body: string,
+    method: MethodDeclaration,
+    meta: TaskMetadata
+  ) {
+    if (!body) {
+      const line = method.getNameNode().getStartLineNumber();
+      const column = method.getNameNode().getStartLinePos();
+      throw new BuildError(
+        `Method ${method.getName()} has no body.`,
+        this.context.classDecl.getSourceFile().getFilePath(),
+        line + 1,
+        column + 1,
+        method.getText(),
+        "Decorated tasks must contain a body with logic. Did you forget to implement it?"
+      );
+    }
   }
 }

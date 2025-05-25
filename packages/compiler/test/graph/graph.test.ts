@@ -1,27 +1,12 @@
+import { deepStrictEqual, fail, ok, strictEqual, throws } from "assert";
 import { describe, it } from "node:test";
 import { ExecutionGraphBuilder } from "../../lib/graph";
-import { deepStrictEqual, strictEqual } from "assert";
-import { MetadataRegistry } from "@cadenza/core";
+import { BuildError } from "../../lib/graph/error";
 
-describe("ExecutionGraphBuilder", () => {
+describe.only("ExecutionGraphBuilder", () => {
   it("builds a graph from HelloWorkflow", () => {
-    // Manually simulate decorator calls (since we're not running decorators at compile time)
-    MetadataRegistry.registerTask({
-      workflowClass: { name: "HelloWorkflow" } as any,
-      kind: "lambda",
-      name: "sayHello",
-      options: {},
-    });
-
-    MetadataRegistry.registerTask({
-      workflowClass: { name: "HelloWorkflow" } as any,
-      kind: "lambda",
-      name: "sayGoodbye",
-      options: {},
-    });
-
     const graph = new ExecutionGraphBuilder(
-      require.resolve("./fixtures/HelloWorkflow.ts")
+      "test/graph/fixtures/HelloWorkflow.ts"
     ).build();
 
     strictEqual(graph.workflowName, "HelloWorkflow");
@@ -32,5 +17,13 @@ describe("ExecutionGraphBuilder", () => {
 
     const sayGoodbye = graph.nodes.find((n) => n.id === "sayGoodbye");
     deepStrictEqual(sayGoodbye?.dependsOn, ["sayHello"]);
+  });
+
+  it.only("should throw an error when decorated methods are not implemented ", () => {
+    throws(() => {
+      new ExecutionGraphBuilder(
+        "test/graph/fixtures/NotImplementedHelloWorkflow.ts"
+      ).build();
+    }, {name: "GraphBuildError", message: "Method sayHello has no body."});
   });
 });
