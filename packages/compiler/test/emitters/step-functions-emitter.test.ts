@@ -1,15 +1,12 @@
+import { ok } from "assert";
 import { Stack } from "aws-cdk-lib";
 import { Template } from "aws-cdk-lib/assertions";
 import * as sfn from "aws-cdk-lib/aws-stepfunctions";
 import { Construct } from "constructs";
 import { describe, it } from "node:test";
 import { NodeEmitter, StepFunctionsEmitter } from "../../lib";
+import { NodeEmitterRegistry } from "../../lib/emitters/node-emitter-registry";
 import { ExecutionNode, ExecutionNodeKind } from "../../lib/types";
-import {
-  NodeEmitterRegistry,
-  registerDefaultEmitters,
-} from "../../lib/emitters/node-emitter-registry";
-import { ok } from "assert";
 
 // Dummy emitter just to mock out real Lambda tasks
 class MockLambdaNodeEmitter implements NodeEmitter {

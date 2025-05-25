@@ -24,7 +24,6 @@ describe("lambdaTask decorator and MetadataRegistry", () => {
       "process",
     ]);
     strictEqual(tasksArray[0].kind, "lambda");
-    strictEqual(typeof tasksArray[0].fn, "function");
   });
 
   it("Should register metadata in isolation", () => {

@@ -7,7 +7,7 @@ export class DevWorkflowStack extends Stack {
     super(scope, id, props);
 
     new Workflow(this, "HelloWorkflow", {
-      workflowEntry: require.resolve("../src/index.ts"),
+      workflowEntry: "src/index.ts",
     });
   }
 }

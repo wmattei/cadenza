@@ -10,7 +10,6 @@ describe("ExecutionGraphBuilder", () => {
       workflowClass: { name: "HelloWorkflow" } as any,
       kind: "lambda",
       name: "sayHello",
-      fn: () => {},
       options: {},
     });
 
@@ -18,7 +17,6 @@ describe("ExecutionGraphBuilder", () => {
       workflowClass: { name: "HelloWorkflow" } as any,
       kind: "lambda",
       name: "sayGoodbye",
-      fn: () => {},
       options: {},
     });
 

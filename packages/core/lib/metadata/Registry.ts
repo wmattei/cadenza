@@ -2,7 +2,6 @@ export type TaskMetadataKind = "lambda" | "fargate";
 
 export interface TaskMetadata {
   name: string;
-  fn: Function;
   kind: TaskMetadataKind;
   options: Record<string, any>;
   workflowClass: Function;

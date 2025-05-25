@@ -32,10 +32,7 @@ export class ExecutionGraphBuilder {
 
       const expr = call.getExpression();
 
-      if (
-        Node.isPropertyAccessExpression(expr) &&
-        expr.getExpression().getText() === "this"
-      ) {
+      if (Node.isPropertyAccessExpression(expr)) {
         const taskName = expr.getName();
 
         if (registeredTasks.has(taskName)) {

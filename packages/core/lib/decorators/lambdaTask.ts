@@ -14,7 +14,6 @@ export function lambdaTask(options: LambdaTaskOptions = {}): MethodDecorator {
       workflowClass: target.constructor,
       kind: "lambda",
       name: propertyKey.toString(),
-      fn: descriptor.value,
       options,
     });
   };

@@ -1,4 +1,4 @@
-import { CadenzaWorkflow, devRun, lambdaTask } from "@cadenza/core";
+import { CadenzaWorkflow, lambdaTask } from "@cadenza/core";
 
 export class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
   @lambdaTask()
@@ -18,4 +18,4 @@ export class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
   }
 }
 
-devRun(HelloWorkflow, { name: "World" }, { debugState: true });
+// devRun(HelloWorkflow, { name: "World" }, { debugState: true });
