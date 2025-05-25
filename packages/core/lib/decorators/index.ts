@@ -1,1 +1,1 @@
-export * from "./lambdaTask";
+export * from "./lambda";

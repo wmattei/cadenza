@@ -1,6 +1,6 @@
 import { deepEqual, deepStrictEqual, strictEqual } from "assert";
 import { beforeEach, describe, it } from "node:test";
-import { lambdaTask } from "../lib/decorators";
+import { lambda } from "../lib/decorators";
 import { MetadataRegistry } from "../lib/metadata";
 
 describe("lambdaTask decorator and MetadataRegistry", () => {
@@ -10,8 +10,8 @@ describe("lambdaTask decorator and MetadataRegistry", () => {
 
   it("should register lambda tasks with metadata", () => {
     class SampleWorkflow {
-      @lambdaTask() process() {}
-      @lambdaTask() cleanup() {}
+      @lambda() process() {}
+      @lambda() cleanup() {}
     }
 
     const tasks = MetadataRegistry.getTasksForWorkflow(SampleWorkflow.name);
@@ -28,10 +28,10 @@ describe("lambdaTask decorator and MetadataRegistry", () => {
 
   it("Should register metadata in isolation", () => {
     class A {
-      @lambdaTask() one() {}
+      @lambda() one() {}
     }
     class B {
-      @lambdaTask() two() {}
+      @lambda() two() {}
     }
     strictEqual(MetadataRegistry.getTasksForWorkflow(A.name).size, 1);
     strictEqual(MetadataRegistry.getTasksForWorkflow(B.name).size, 1);

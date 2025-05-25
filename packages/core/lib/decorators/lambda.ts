@@ -4,7 +4,7 @@ export interface LambdaTaskOptions {
   // TODO
 }
 
-export function lambdaTask(options: LambdaTaskOptions = {}): MethodDecorator {
+export function lambda(options: LambdaTaskOptions = {}): MethodDecorator {
   return function (target, propertyKey, descriptor) {
     if (!descriptor || typeof descriptor.value !== "function") {
       throw new Error(`@lambdaTask must be used on a method.`);
