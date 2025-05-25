@@ -1,9 +1,7 @@
-import { describe, it } from "node:test";
-import { writeFileSync, readFileSync, existsSync } from "node:fs";
-import { join } from "node:path";
-import { App, Stack } from "aws-cdk-lib";
 import { Workflow } from "@cadenza/cdk"; // your construct
-import { strictEqual } from "node:assert";
+import { App, Stack } from "aws-cdk-lib";
+import { join } from "node:path";
+import { beforeEach, describe, it, snapshot } from "node:test";
 
 const WORKFLOWS = [
   {
@@ -16,12 +14,11 @@ const WORKFLOWS = [
   },
 ];
 
-const SNAPSHOT_DIR = join(__dirname, "__snapshots__");
-
 describe("E2E: CDK output", () => {
+  snapshot.setResolveSnapshotPath((path) => join(__dirname, "__snapshots__", "workflow.test.ts.snapshot"));
   for (const workflow of WORKFLOWS) {
     describe(`Workflow: ${workflow.name}`, () => {
-      it("matches the expected output snapshot", () => {
+      it("matches the expected output snapshot", (t) => {
         const app = new App();
         const stack = new Stack(app, "TestStack");
 
@@ -34,22 +31,7 @@ describe("E2E: CDK output", () => {
           .getStackArtifact(stack.artifactId).template;
         const current = JSON.stringify(template, null, 2);
 
-        const snapshotFile = join(
-          SNAPSHOT_DIR,
-          `${workflow.name}.snapshot.json`
-        );
-
-        if (process.env.UPDATE_SNAPSHOT === "1" || !existsSync(snapshotFile)) {
-          writeFileSync(snapshotFile, current);
-          console.log("📸 Snapshot updated.");
-        } else {
-          const expected = readFileSync(snapshotFile, "utf8");
-          strictEqual(
-            current,
-            expected,
-            "Generated template did not match snapshot."
-          );
-        }
+        t.assert.snapshot(current);
       });
     });
   }

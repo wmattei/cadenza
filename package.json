@@ -14,7 +14,8 @@
     "synth": "turbo run synth",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch",
-    "test:e2e": "node --require tsx --test ./test/**/*.test.ts"
+    "test:e2e": "node --require tsx --test ./test/**/*.test.ts",
+    "test:e2e:update-snapshot": "node --require tsx --test  --test-update-snapshots ./test/e2e/**/*.test.ts"
   },
   "devDependencies": {
     "@types/node": "^22.15.21",
