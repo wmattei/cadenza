@@ -27,6 +27,13 @@ export interface LambdaTaskOptions {
   timeout?: number;
 }
 
+/**
+ * This decorator marks a method as a Lambda task.
+ * All code inside this method will become the code of a lambda function.
+ * You can pass arguments to the decorator to configure the lambda function.
+ * @param options Options for the Lambda task.
+ * @returns
+ */
 export function lambda(options: LambdaTaskOptions = {}): MethodDecorator {
   return function (target, propertyKey, descriptor) {
     if (!descriptor || typeof descriptor.value !== 'function') {

@@ -1,6 +1,6 @@
+import { Workflow } from '@cadenza/cdk';
 import { Stack, StackProps } from 'aws-cdk-lib';
 import { Construct } from 'constructs';
-import { Workflow } from '@cadenza/cdk';
 
 export class DevWorkflowStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {

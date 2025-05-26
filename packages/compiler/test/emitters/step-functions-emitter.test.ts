@@ -32,13 +32,12 @@ describe('StepFunctionsEmitter', () => {
         {
           id: 'taskA',
           kind: 'lambda' as ExecutionNodeKind,
-          dependsOn: [],
+          next: 'taskB',
           data: {},
         },
         {
           id: 'taskB',
           kind: 'lambda' as ExecutionNodeKind,
-          dependsOn: ['taskA'],
           data: {},
         },
       ],

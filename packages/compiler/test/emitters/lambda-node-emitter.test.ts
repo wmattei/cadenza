@@ -13,7 +13,6 @@ describe('LambdaNodeEmitter', () => {
     new LambdaNodeEmitter().emit(stack, {
       id: 'taskA',
       kind: 'lambda' as ExecutionNodeKind,
-      dependsOn: [],
       data: {
         name: 'taskALambda',
         description: 'This is Task A',

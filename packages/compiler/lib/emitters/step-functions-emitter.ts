@@ -3,8 +3,8 @@ import { Construct } from 'constructs';
 
 import { ExecutionGraph } from '../types';
 
-import { NodeEmitterRegistry, registerDefaultEmitters } from './node-emitter-registry';
 import { NodeEmitter } from './node-emitter';
+import { NodeEmitterRegistry, registerDefaultEmitters } from './node-emitter-registry';
 
 export class StepFunctionsEmitter {
   constructor(private emittersOverride?: Record<string, NodeEmitter>) {
@@ -23,22 +23,17 @@ export class StepFunctionsEmitter {
     const wired = new Set<string>();
 
     for (const node of graph.nodes) {
-      if (!node.dependsOn || node.dependsOn.length === 0) continue;
-
-      for (const parentId of node.dependsOn) {
-        if (!states[parentId]) {
-          throw new Error(`Dependency "${parentId}" for task "${node.id}" not found`);
+      if (node.next) {
+        const nextNode = states[node.next];
+        if (!nextNode) {
+          throw new Error(`Next node ${node.next} not found for node ${node.id}`);
         }
-
-        // Only call .next() once per parent
-        if (!wired.has(parentId)) {
-          states[parentId].next(states[node.id]);
-          wired.add(parentId);
-        }
+        states[node.id].next(nextNode);
+        wired.add(node.id);
       }
     }
 
-    const rootNode = graph.nodes.find((n) => !n.dependsOn || n.dependsOn.length === 0);
+    const rootNode = graph.nodes[0];
     if (!rootNode) throw new Error('No root node found');
 
     const definition = states[rootNode.id];

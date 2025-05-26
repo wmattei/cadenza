@@ -3,8 +3,8 @@ import { describe, it } from 'node:test';
 
 import { ExecutionGraphBuilder } from '../../lib/graph';
 
-describe('ExecutionGraphBuilder', () => {
-  it('builds a graph from HelloWorkflow', () => {
+describe('Lambda call', () => {
+  it('builds a graph from lambda calls', () => {
     const graph = new ExecutionGraphBuilder('test/graph/fixtures/HelloWorkflow.ts').build();
 
     strictEqual(graph.workflowName, 'HelloWorkflow');
@@ -13,8 +13,18 @@ describe('ExecutionGraphBuilder', () => {
     const ids = graph.nodes.map((n) => n.id).sort();
     deepStrictEqual(ids, ['sayGoodbye', 'sayHello']);
 
+    const sayHello = graph.nodes.find((n) => n.id === 'sayHello');
+    deepStrictEqual(sayHello?.next, 'sayGoodbye');
+
     const sayGoodbye = graph.nodes.find((n) => n.id === 'sayGoodbye');
-    deepStrictEqual(sayGoodbye?.dependsOn, ['sayHello']);
+    deepStrictEqual(sayGoodbye?.kind, 'lambda');
+    deepStrictEqual(sayGoodbye?.data, {
+      code: 'return `Goodbye, ${name}`;',
+      name: 'sayGoodbye',
+      description: undefined,
+      memorySize: 128,
+      timeout: 30000,
+    });
   });
 
   it('should throw an error when decorated methods are not implemented ', () => {
