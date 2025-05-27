@@ -5,10 +5,9 @@ import { Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
-
-import { NodeEmitter, StepFunctionsEmitter } from '../../lib';
-import { NodeEmitterRegistry } from '../../lib/emitters/node-emitter-registry';
-import { ExecutionGraph, ExecutionNode, ExecutionNodeKind } from '../../lib/types';
+import { NodeEmitter, StepFunctionsEmitter } from '../../lib/emitter';
+import { ExecutionGraph, ExecutionNode, ExecutionNodeKind } from '@cadenza/compiler';
+import { NodeEmitterRegistry } from '../../lib/emitter/node-emitter-registry';
 
 // Dummy emitter just to mock out real Lambda tasks
 class MockLambdaNodeEmitter implements NodeEmitter {
@@ -21,10 +20,9 @@ describe('StepFunctionsEmitter', () => {
   it('emits a state machine from a simple graph', () => {
     // Setup
     const stack = new Stack();
-    const emitter = new StepFunctionsEmitter();
+    const emitter = new StepFunctionsEmitter(stack);
 
     NodeEmitterRegistry.register('lambda', new MockLambdaNodeEmitter());
-    // registerDefaultEmitters();
 
     const graph: ExecutionGraph = {
       workflowName: 'TestWorkflow',
@@ -43,7 +41,7 @@ describe('StepFunctionsEmitter', () => {
       ],
     };
 
-    emitter.emit(stack, graph);
+    emitter.emit(graph);
 
     const template = Template.fromStack(stack);
 

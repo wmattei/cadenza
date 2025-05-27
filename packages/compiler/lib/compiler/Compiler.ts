@@ -1,18 +1,14 @@
-import { Construct } from 'constructs';
-
-import { NodeEmitter, StepFunctionsEmitter } from '../emitters';
+import { CadenzaEmitter } from '../emitter';
 import { ExecutionGraphBuilder } from '../graph';
 
 export class CadenzaCompiler {
-  constructor(private emittersOverride?: Record<string, NodeEmitter>) {}
+  constructor(private emitter: CadenzaEmitter) {}
 
-  compile(scope: Construct, workflowEntry: string) {
+  compile(workflowEntry: string) {
     const graph = new ExecutionGraphBuilder(workflowEntry).build();
 
     // TODO output the graph for debugging purposes. JSON or DOT format?
 
-    const emitter = new StepFunctionsEmitter(this.emittersOverride);
-
-    return emitter.emit(scope, graph);
+    return this.emitter.emit(graph);
   }
 }

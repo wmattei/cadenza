@@ -41,6 +41,8 @@ __metadata:
   resolution: "@cadenza/cdk@workspace:packages/cdk"
   dependencies:
     "@cadenza/compiler": "workspace:^"
+    aws-cdk-lib: ^2.198.0
+    constructs: ^10.4.2
   languageName: unknown
   linkType: soft
 
@@ -898,9 +900,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^8.32.1
     "@typescript-eslint/parser": ^8.32.1
     aws-cdk: 2
-    aws-cdk-lib: ^2.198.0
     chalk: ^5.4.1
-    constructs: ^10.4.2
     eslint: ^9.27.0
     eslint-plugin-import: ^2.31.0
     eslint-plugin-no-only-tests: ^3.3.0

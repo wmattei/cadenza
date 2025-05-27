@@ -3,7 +3,7 @@ import { Code, Function, Runtime } from 'aws-cdk-lib/aws-lambda';
 import { LambdaInvoke } from 'aws-cdk-lib/aws-stepfunctions-tasks';
 import { Construct } from 'constructs';
 
-import { ExecutionNode } from '../../types';
+import { ExecutionNode } from '@cadenza/compiler';
 import { NodeEmitter } from '../node-emitter';
 
 export class LambdaNodeEmitter implements NodeEmitter {

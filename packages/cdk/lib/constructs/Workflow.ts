@@ -1,5 +1,6 @@
-import { CadenzaCompiler, NodeEmitter } from '@cadenza/compiler';
+import { CadenzaCompiler } from '@cadenza/compiler';
 import { Construct } from 'constructs';
+import { NodeEmitter, StepFunctionsEmitter } from '../emitter';
 
 export interface WorkflowProps {
   /**
@@ -31,7 +32,9 @@ export class Workflow extends Construct {
   constructor(scope: Construct, id: string, props: WorkflowProps) {
     super(scope, id);
 
-    const compiler = new CadenzaCompiler(props.emittersOverride);
-    compiler.compile(this, props.workflowEntry);
+    const emitter = new StepFunctionsEmitter(this, props.emittersOverride);
+
+    const compiler = new CadenzaCompiler(emitter);
+    compiler.compile(props.workflowEntry);
   }
 }

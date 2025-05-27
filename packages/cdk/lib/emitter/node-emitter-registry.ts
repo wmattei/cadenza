@@ -4,7 +4,6 @@ import { PassNodeEmitter } from './node-emitters/pass-node-emitter';
 
 export function registerDefaultEmitters() {
   NodeEmitterRegistry.register('lambda', new LambdaNodeEmitter());
-  //   NodeEmitterRegistry.register("fargate", new FargateNodeEmitter());
   NodeEmitterRegistry.register('transition', new PassNodeEmitter());
 }
 

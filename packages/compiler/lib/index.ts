@@ -1,2 +1,3 @@
 export * from './compiler';
-export * from './emitters';
+export * from './emitter';
+export * from './types';

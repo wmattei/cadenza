@@ -1,23 +1,25 @@
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 
-import { ExecutionGraph } from '../types';
-
+import { CadenzaEmitter, ExecutionGraph } from '@cadenza/compiler';
 import { NodeEmitter } from './node-emitter';
 import { NodeEmitterRegistry, registerDefaultEmitters } from './node-emitter-registry';
 
-export class StepFunctionsEmitter {
-  constructor(private emittersOverride?: Record<string, NodeEmitter>) {
+export class StepFunctionsEmitter implements CadenzaEmitter {
+  constructor(
+    private scope: Construct,
+    private emittersOverride?: Record<string, NodeEmitter>,
+  ) {
     registerDefaultEmitters();
     this.registerCustomEmitters();
   }
 
-  emit(scope: Construct, graph: ExecutionGraph): sfn.StateMachine {
+  emit(graph: ExecutionGraph): sfn.StateMachine {
     const states: Record<string, sfn.INextable & sfn.IChainable> = {};
 
     for (const node of graph.nodes) {
       const emitter = NodeEmitterRegistry.get(node.kind);
-      states[node.id] = emitter.emit(scope, node);
+      states[node.id] = emitter.emit(this.scope, node);
     }
 
     const wired = new Set<string>();
@@ -38,7 +40,7 @@ export class StepFunctionsEmitter {
 
     const definition = states[rootNode.id];
 
-    return new sfn.StateMachine(scope, graph.workflowName, {
+    return new sfn.StateMachine(this.scope, graph.workflowName, {
       definitionBody: sfn.DefinitionBody.fromChainable(definition),
     });
   }
