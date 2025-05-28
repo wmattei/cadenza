@@ -1,9 +1,9 @@
 import { describe, it } from 'node:test';
 
+import { ExecutionNode, ExecutionNodeKind } from '@cadenza/compiler';
 import { Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 
-import { ExecutionNode, ExecutionNodeKind } from '@cadenza/compiler';
 import { LambdaNodeEmitter } from '../../lib/emitter/node-emitters/lambda-node-emitter';
 
 describe('LambdaNodeEmitter', () => {

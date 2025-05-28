@@ -1,7 +1,7 @@
+import { CadenzaEmitter, ExecutionGraph } from '@cadenza/compiler';
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 
-import { CadenzaEmitter, ExecutionGraph } from '@cadenza/compiler';
 import { NodeEmitter } from './node-emitter';
 import { NodeEmitterRegistry, registerDefaultEmitters } from './node-emitter-registry';
 
