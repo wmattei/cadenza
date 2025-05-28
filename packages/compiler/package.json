@@ -11,6 +11,8 @@
   },
   "packageManager": "yarn@3.5.1",
   "dependencies": {
-    "@cadenza/core": "workspace:^"
+    "@cadenza/core": "workspace:^",
+    "chalk": "^5.4.1",
+    "ts-morph": "^26.0.0"
   }
 }

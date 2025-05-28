@@ -51,6 +51,8 @@ __metadata:
   resolution: "@cadenza/compiler@workspace:packages/compiler"
   dependencies:
     "@cadenza/core": "workspace:^"
+    chalk: ^5.4.1
+    ts-morph: ^26.0.0
   languageName: unknown
   linkType: soft
 
@@ -900,14 +902,12 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^8.32.1
     "@typescript-eslint/parser": ^8.32.1
     aws-cdk: 2
-    chalk: ^5.4.1
     eslint: ^9.27.0
     eslint-plugin-import: ^2.31.0
     eslint-plugin-no-only-tests: ^3.3.0
     eslint-plugin-prettier: ^5.4.0
     eslint-plugin-unused-imports: ^4.1.4
     prettier: ^3.5.3
-    ts-morph: ^26.0.0
     tsx: ^4.19.4
     turbo: ^2.5.3
     typescript: ^5.8.3
