@@ -14,7 +14,7 @@ describe('Lambda call', () => {
     deepStrictEqual(ids, ['sayGoodbye', 'sayHello']);
 
     const sayHello = graph.nodes.find((n) => n.id === 'sayHello');
-    deepStrictEqual(sayHello?.next, 'sayGoodbye');
+    deepStrictEqual(sayHello?.next?.id, 'sayGoodbye');
 
     const sayGoodbye = graph.nodes.find((n) => n.id === 'sayGoodbye');
     deepStrictEqual(sayGoodbye?.kind, 'lambda');

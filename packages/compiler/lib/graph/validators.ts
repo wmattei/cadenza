@@ -7,7 +7,7 @@ export class LambdaDecoratorValidator {
     body: string,
     method: MethodDeclaration,
     _meta: TaskMetadata,
-    file: string,
+    file?: string,
   ): void {
     if (!body) {
       const line = method.getNameNode().getStartLineNumber();

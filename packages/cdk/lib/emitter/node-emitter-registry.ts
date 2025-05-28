@@ -1,10 +1,8 @@
 import { NodeEmitter } from './node-emitter';
 import { LambdaNodeEmitter } from './node-emitters/lambda-node-emitter';
-import { PassNodeEmitter } from './node-emitters/pass-node-emitter';
 
 export function registerDefaultEmitters() {
   NodeEmitterRegistry.register('lambda', new LambdaNodeEmitter());
-  NodeEmitterRegistry.register('transition', new PassNodeEmitter());
 }
 
 export class NodeEmitterRegistry {

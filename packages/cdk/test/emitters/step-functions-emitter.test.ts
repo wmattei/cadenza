@@ -1,12 +1,12 @@
 import { ok } from 'assert';
 import { describe, it } from 'node:test';
 
+import { ExecutionGraph, ExecutionNode, ExecutionNodeKind } from '@cadenza/compiler';
 import { Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 import { NodeEmitter, StepFunctionsEmitter } from '../../lib/emitter';
-import { ExecutionGraph, ExecutionNode, ExecutionNodeKind } from '@cadenza/compiler';
 import { NodeEmitterRegistry } from '../../lib/emitter/node-emitter-registry';
 
 // Dummy emitter just to mock out real Lambda tasks
@@ -24,7 +24,7 @@ describe('StepFunctionsEmitter', () => {
 
     NodeEmitterRegistry.register('lambda', new MockLambdaNodeEmitter());
 
-    const graph: ExecutionGraph = {
+    const graph = ExecutionGraph.fromObject({
       workflowName: 'TestWorkflow',
       nodes: [
         {
@@ -39,7 +39,7 @@ describe('StepFunctionsEmitter', () => {
           data: {},
         },
       ],
-    };
+    });
 
     emitter.emit(graph);
 

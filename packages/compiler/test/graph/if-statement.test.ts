@@ -9,6 +9,7 @@ describe('If statement', () => {
       'test/graph/fixtures/HelloWorkflowWithIfStatement.ts',
     ).build();
 
+
     const choiceNode = graph.nodes.find((n) => n.kind === 'choice');
 
     ok(choiceNode);

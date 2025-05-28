@@ -1,4 +1,4 @@
-export type TaskMetadataKind = 'lambda' | 'fargate';
+export type TaskMetadataKind = 'lambda';
 
 export interface TaskMetadata {
   name: string;

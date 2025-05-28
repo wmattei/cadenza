@@ -26,7 +26,7 @@ export class StepFunctionsEmitter implements CadenzaEmitter {
 
     for (const node of graph.nodes) {
       if (node.next) {
-        const nextNode = states[node.next];
+        const nextNode = states[node.next.id];
         if (!nextNode) {
           throw new Error(`Next node ${node.next} not found for node ${node.id}`);
         }

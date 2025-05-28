@@ -3,24 +3,22 @@ import { describe, it } from 'node:test';
 import { Stack } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 
-import { ExecutionNodeKind } from '@cadenza/compiler';
+import { ExecutionNode, ExecutionNodeKind } from '@cadenza/compiler';
 import { LambdaNodeEmitter } from '../../lib/emitter/node-emitters/lambda-node-emitter';
 
 describe('LambdaNodeEmitter', () => {
   it('emits a lambda function', () => {
     const stack = new Stack();
 
-    new LambdaNodeEmitter().emit(stack, {
-      id: 'taskA',
-      kind: 'lambda' as ExecutionNodeKind,
-      data: {
-        name: 'taskALambda',
-        description: 'This is Task A',
-        timeout: 30,
-        memorySize: 128,
-        code: "exports.handler = async () => { return 'Hello from Task A'; };",
-      },
+    const lambdaNode = new ExecutionNode('taskA', 'lambda' as ExecutionNodeKind, {
+      name: 'taskALambda',
+      description: 'This is Task A',
+      timeout: 30,
+      memorySize: 128,
+      code: "exports.handler = async () => { return 'Hello from Task A'; };",
     });
+
+    new LambdaNodeEmitter().emit(stack, lambdaNode);
 
     const template = Template.fromStack(stack);
 
