@@ -1,5 +1,15 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MetadataRegistry } from '../metadata';
 import { merge } from '../utils/lodashis';
+
+// interface ClassMethodDecoratorContext {
+//   kind: "method";
+//   name: string | symbol;
+//   static: boolean;
+//   private: boolean;
+//   addInitializer(initializer: () => void): void;
+// }
 
 export interface LambdaTaskOptions {
   /**
@@ -34,24 +44,29 @@ export interface LambdaTaskOptions {
  * @param options Options for the Lambda task.
  * @returns
  */
-export function lambda(options: LambdaTaskOptions = {}): MethodDecorator {
-  return function (target, propertyKey, descriptor) {
-    if (!descriptor || typeof descriptor.value !== 'function') {
-      throw new Error(`@lambda must be used on a method.`);
-    }
+export function lambda(options: LambdaTaskOptions = {}) {
+  return function (target: any, context: ClassMethodDecoratorContext) {
+    context.addInitializer(function (this) {
+      // @ts-ignore
+      const workflowClass = this.constructor;
 
-    const defaultLambdaOptions: LambdaTaskOptions = {
-      name: propertyKey.toString(),
-      description: undefined,
-      memorySize: 128,
-      timeout: 30000,
-    };
+      if (!workflowClass || typeof workflowClass !== 'function') {
+        throw new Error(`Failed to resolve workflow class for method "${context.name.toString()}"`);
+      }
 
-    MetadataRegistry.registerTask({
-      workflowClass: target.constructor,
-      kind: 'lambda',
-      name: propertyKey.toString(),
-      options: merge(defaultLambdaOptions, options),
+      const defaultLambdaOptions: LambdaTaskOptions = {
+        name: context.name.toString(),
+        description: undefined,
+        memorySize: 128,
+        timeout: 30000,
+      };
+
+      MetadataRegistry.registerTask({
+        workflowClass,
+        kind: 'lambda',
+        name: context.name.toString(),
+        options: merge(defaultLambdaOptions, options),
+      });
     });
   };
 }

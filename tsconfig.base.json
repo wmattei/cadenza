@@ -1,9 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "CommonJS",
+    "target": "ES2022", // ✅ ECMAScript class fields + decorators
+    "module": "ES2022", // or "NodeNext" if using Node
     "strict": true,
     "declaration": true,
-    "composite": true
+    "composite": true,
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "experimentalDecorators": false,
+    "emitDecoratorMetadata": false,
+    "useDefineForClassFields": true
   }
 }

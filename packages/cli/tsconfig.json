@@ -5,10 +5,7 @@
     "composite": true,
     "declaration": true,
     "declarationMap": true,
-    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo",
-    "experimentalDecorators": false,
-    "useDefineForClassFields": true
-    // "emitDecoratorMetadata": true
+    "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
   },
   "include": ["./lib/**/*", "./test/**/*"]
 }

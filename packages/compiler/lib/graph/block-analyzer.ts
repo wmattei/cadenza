@@ -51,7 +51,6 @@ export class BlockAnalyzer {
     const methodDecl = this.classDecl.getMethod(methodName);
     const className = this.classDecl.getNameOrThrow();
     if (!methodDecl) return;
-
     const taskMeta = MetadataRegistry.getTasksForWorkflow(className)?.get(methodName);
 
     if (taskMeta) {

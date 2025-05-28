@@ -1,0 +1,21 @@
+{
+  "name": "@cadenza/cli",
+  "version": "0.1.0",
+  "main": "dist/lib/index.js",
+  "bin": {
+    "cadenza-graph": "./dist/lib/index.js"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node --require tsx --watch lib/index.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "node --require tsx --test ./test/**/*.test.ts"
+  },
+  "packageManager": "yarn@3.5.1",
+  "dependencies": {
+    "chalk": "^5.4.1",
+    "chokidar": "^4.0.3",
+    "fastify": "^5.3.3",
+    "tsx": "^4.19.4"
+  }
+}

@@ -78,4 +78,27 @@ export class ExecutionGraph {
 
     return graph;
   }
+
+  toDot(): string {
+    const lines: string[] = [];
+    lines.push('digraph ExecutionGraph {');
+
+    for (const node of this.nodes) {
+      const label = `${node.id}\\n(${node.kind})`;
+      lines.push(`  "${node.id}" [label="${label}"];`);
+
+      if (node.next) {
+        lines.push(`  "${node.id}" -> "${node.next}";`);
+      }
+
+      if (node.kind === 'choice' && node.data?.branches) {
+        for (const branch of node.data.branches) {
+          lines.push(`  "${node.id}" -> "${branch.next}" [label="${branch.condition}"];`);
+        }
+      }
+    }
+
+    lines.push('}');
+    return lines.join('\n');
+  }
 }

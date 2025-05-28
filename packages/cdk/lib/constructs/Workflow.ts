@@ -1,3 +1,4 @@
+import { join } from 'path';
 import { CadenzaCompiler } from '@cadenza/compiler';
 import { Construct } from 'constructs';
 import { NodeEmitter, StepFunctionsEmitter } from '../emitter';
@@ -34,7 +35,9 @@ export class Workflow extends Construct {
 
     const emitter = new StepFunctionsEmitter(this, props.emittersOverride);
 
+    const entry = join(process.cwd(), props.workflowEntry);
+
     const compiler = new CadenzaCompiler(emitter);
-    compiler.compile(props.workflowEntry);
+    compiler.compile(entry);
   }
 }
