@@ -16,119 +16,108 @@ export class BlockAnalyzer {
   constructor(
     private readonly graph: ExecutionGraph,
     private readonly classDecl: ClassDeclaration,
+    private readonly isBranched: boolean = false,
   ) {}
   private current: ExecutionNode | null = null;
 
-  analyzeBlock(block: Block, isMainMethod: boolean = false) {
+  analyzeBlock(block: Block, isMainMethod: boolean = false): ExecutionNode | null {
+    let localRoot: ExecutionNode | null = null;
     for (const stmt of block.getStatements()) {
-      this.analyzeStatement(stmt, isMainMethod);
+      const stmtNode = this.analyzeStatement(stmt, isMainMethod);
+      if (!stmtNode) continue;
+      stmtNode.path = [...(this.current?.path || []), stmtNode.id];
+
+      console.info(stmtNode.path);
+
+      if (this.current?.kind === 'choice') {
+        this.current.data.branches.push({
+          condition: 'default',
+          next: stmtNode || ExecutionNode.noop(),
+        });
+      }
+      this.current?.setNext(stmtNode);
+      this.current = stmtNode;
+
+      if (!localRoot) {
+        localRoot = stmtNode;
+      }
     }
+    return localRoot;
   }
 
-  private analyzeStatement(stmt: Statement, isMainMethod: boolean = false) {
+  private analyzeStatement(stmt: Statement, isMainMethod: boolean = false): ExecutionNode | null {
     if (isMainMethod && isEmptyReturn(stmt)) {
-      this.graph.chainNode(ExecutionNode.success(this.graph));
-      return;
+      const successNode = ExecutionNode.success();
+      return successNode;
     }
 
     if (stmt.getKind() === SyntaxKind.IfStatement) {
-      this.handleIfStatement(stmt as IfStatement, isMainMethod);
-      return;
+      return this.handleIfStatement(stmt as IfStatement, isMainMethod);
     }
 
     const call = stmt.getFirstDescendantByKind(SyntaxKind.CallExpression);
     if (call) {
-      this.handleCallExpression(call);
-      return;
+      return this.handleCallExpression(call);
     }
+
+    return ExecutionNode.noop();
   }
 
   private handleCallExpression(call: CallExpression) {
     const expr = call.getExpression();
-    if (!Node.isPropertyAccessExpression(expr)) return;
+    if (!Node.isPropertyAccessExpression(expr)) return null;
 
     const methodName = expr.getName();
     const methodDecl = this.classDecl.getMethod(methodName);
     const className = this.classDecl.getNameOrThrow();
-    if (!methodDecl) return;
+    if (!methodDecl) return null;
     const taskMeta = MetadataRegistry.getTasksForWorkflow(className)?.get(methodName);
 
     if (taskMeta) {
       const body = methodDecl.getBodyText()!;
-
       // TODO custom validators
       BuiltInValidators.lambda.validate(body, methodDecl, taskMeta);
+
       const node = new ExecutionNode(methodName, taskMeta.kind, {
         code: body,
         ...(taskMeta.options ?? {}),
       });
-
-      this.graph.chainNode(node);
-      return;
+      return node;
     }
 
     // Not decorated: visit its body recursively
     const body = methodDecl.getBody();
     if (body) {
-      this.analyzeBlock(body as Block, false);
+      return this.analyzeBlock(body as Block, false);
     }
+
+    return null;
   }
 
   private handleIfStatement(ifStmt: IfStatement, insideRun: boolean = false) {
     const condition = ifStmt.getExpression().getText();
     const thenBlock = ifStmt.getThenStatement();
-    const elseBlock = ifStmt.getElseStatement();
+    // const elseBlock = ifStmt.getElseStatement();
 
-    const choiceNode = new ExecutionNode(`choice_${this.graph.size}`, 'choice', {
+    const choiceNode = new ExecutionNode('choice', 'choice', {
       conditionRaw: condition,
       branches: [],
     });
 
-    this.graph.chainNode(choiceNode);
-    this.current?.setNext(choiceNode);
-    this.current = choiceNode;
+    const thenNode = new BlockAnalyzer(this.graph, this.classDecl, true).analyzeBlock(
+      thenBlock as Block,
+      insideRun,
+    );
 
-    const then = this.buildSubBranch(thenBlock, insideRun);
-    if (then) {
-      choiceNode.data.branches.push({ condition, next: then.entry.id });
-      then.entry.addPrevious(choiceNode);
+    if (thenNode) {
+      choiceNode.data.branches.push({
+        condition: condition,
+        next: thenNode,
+      });
     }
 
-    if (elseBlock) {
-      const elseBranch = this.buildSubBranch(elseBlock, insideRun);
-      if (elseBranch) {
-        choiceNode.data.branches.push({ condition: 'default', next: elseBranch.entry.id });
-        elseBranch.entry.addPrevious(choiceNode);
-      }
-    }
-
-    this.current = null; // Continuation point will be decided after the branch
-  }
-
-  private buildSubBranch(
-    blockOrStmt: Statement,
-    insideRun: boolean,
-  ): { entry: ExecutionNode; exit: ExecutionNode } | undefined {
-    const originalCurrent = this.current;
-    const initialLength = this.graph.nodes.length;
-
-    if (Node.isBlock(blockOrStmt)) {
-      this.analyzeBlock(blockOrStmt as Block, insideRun);
-    } else {
-      this.analyzeStatement(blockOrStmt, insideRun);
-    }
-
-    const newNodes = this.graph.nodes.slice(initialLength);
-
-    if (newNodes.length === 0) return;
-
-    const entry = newNodes[0];
-    const exit = this.current!;
-
-    // Restore current to before the branch
-    this.current = originalCurrent;
-
-    return { entry, exit };
+    // this.graph.addNode(choiceNode);
+    return choiceNode;
   }
 }
 

@@ -1,41 +1,49 @@
-import { ExecutionGraph } from './execution-graph';
-
-export type ExecutionNodeKind = 'success' | 'lambda' | 'choice';
+export type ExecutionNodeKind = 'success' | 'lambda' | 'choice' | 'noop';
 // const DECORATED_KIND: Array<ExecutionKind> = ['lambda'];
 
 export class ExecutionNode {
   public next?: ExecutionNode;
   public previous: ExecutionNode[] = [];
 
-  static success(graph: ExecutionGraph): ExecutionNode {
-    const index = graph.countNodesByKind('success');
-    return new ExecutionNode(`success_${index}`, 'success', {});
+  public path: string[] = [];
+
+  static success(): ExecutionNode {
+    return new ExecutionNode('success', 'success', {});
+  }
+
+  static noop(): ExecutionNode {
+    const node = new ExecutionNode('noop', 'noop');
+    return node;
   }
 
   constructor(
-    public readonly id: string,
-    public readonly kind: ExecutionNodeKind,
+    public id: string,
+    public kind: ExecutionNodeKind,
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    public readonly data: Record<string, any>,
+    public data: Record<string, any> = {},
   ) {}
 
-  setNext(nextNode: ExecutionNode): ExecutionNode {
-    this.next = nextNode;
-    nextNode.previous.push(this);
-    return nextNode;
+  // For debugging purposes
+  private get [Symbol.toStringTag]() {
+    return `$$${this.id}`;
   }
 
-  addPrevious(previousNode: ExecutionNode): ExecutionNode {
-    this.previous.push(previousNode);
-    return this;
+  setNext(node: ExecutionNode) {
+    this.next = node;
+    node.previous.push(this);
+  }
+
+  isChoice(): boolean {
+    return this.kind === 'choice';
+  }
+
+  getBranchTargets(): string[] {
+    return this.isChoice() ? this.data.branches.map((b: { next: ExecutionNode }) => b.next) : [];
+  }
+
+  addPrevious(node: ExecutionNode): void {
+    if (!this.previous.includes(node)) {
+      this.previous.push(node);
+    }
   }
 }
-
-// type DataOnly<T> = {
-//   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
-//   [K in keyof T as T[K] extends Function ? never : K]: T[K];
-// };
-
-// export type ExecutionNodeData = Omit<DataOnly<ExecutionNode>, 'graph' | 'previous'> & {
-//   next?: string;
-// };

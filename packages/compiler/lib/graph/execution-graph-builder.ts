@@ -40,7 +40,8 @@ export class ExecutionGraphBuilder {
     const analyzer = new BlockAnalyzer(graph, classDecl);
 
     try {
-      analyzer.analyzeBlock(body, true);
+      const root = analyzer.analyzeBlock(body, true);
+      graph.root = root;
       return graph;
     } catch (error) {
       if (error instanceof BuildError) {

@@ -15,10 +15,12 @@ if (!entryPath) {
 
 let dot = '';
 
+const builder = new ExecutionGraphBuilder(resolve(process.cwd(), entryPath));
 async function rebuildGraph() {
   try {
-    const builder = new ExecutionGraphBuilder(resolve(process.cwd(), entryPath));
     const graph = builder.build();
+    console.info(graph.workflowName);
+    // console.info(graph.findNodeById('choice_1')!.data);
     dot = generateDotGraph(graph);
     console.log(chalk.gray('🔄 Graph rebuilt'));
   } catch (err) {
@@ -39,8 +41,9 @@ fastify.get('/', async (_, reply) => {
   return reply.type('text/html').send(`
     <html>
   <head>
-    <script src="https://d3js.org/d3.v6.min.js"></script>
-    <script src="https://unpkg.com/d3-graphviz@4.0.0/build/d3-graphviz.min.js"></script>
+    <script src="//d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/@hpcc-js/wasm@2.20.0/dist/graphviz.umd.js"></script>
+    <script src="https://unpkg.com/d3-graphviz@5.6.0/build/d3-graphviz.js"></script>
   </head>
   <body>
     <h1>Graph</h1>
@@ -50,7 +53,8 @@ fastify.get('/', async (_, reply) => {
       async function render() {
         const res = await fetch('/graph.dot');
         const dot = await res.text();
-        d3.select("#graph").graphviz().renderDot(dot);
+        d3.select("#graph").graphviz()
+          .renderDot(dot);
       }
 
       render();
