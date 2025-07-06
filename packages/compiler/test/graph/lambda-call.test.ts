@@ -1,25 +1,36 @@
-import { deepStrictEqual, strictEqual, throws } from 'assert';
-import { describe, it } from 'node:test';
-
+import { join } from 'path';
 import { ExecutionGraphBuilder } from '../../lib/graph';
+import { TaskNode } from '../../lib/graph/models';
+
+const fixturePath = join(process.cwd(), 'test/graph/fixtures/LambdaCall.ts');
 
 describe('Lambda call', () => {
   it('builds a graph from lambda calls', () => {
-    const graph = new ExecutionGraphBuilder('test/graph/fixtures/HelloWorkflow.ts').build();
+    const graph = new ExecutionGraphBuilder(fixturePath).build('LambdaCallWorkflow');
 
-    strictEqual(graph.workflowName, 'HelloWorkflow');
-    strictEqual(graph.nodes.length, 2);
+    expect(graph.workflowName).toBe('LambdaCallWorkflow');
+    expect(graph.nodes.length).toBe(2);
 
-    const ids = graph.nodes.map((n) => n.id).sort();
-    deepStrictEqual(ids, ['sayGoodbye', 'sayHello']);
+    const firstNode = graph.nodes[0] as TaskNode;
+    const secondNode = graph.nodes[1] as TaskNode;
 
-    const sayHello = graph.nodes.find((n) => n.id === 'sayHello');
-    deepStrictEqual(sayHello?.next?.id, 'sayGoodbye');
+    expect(firstNode.kind).toBe('task');
+    expect(secondNode.kind).toBe('task');
 
-    const sayGoodbye = graph.nodes.find((n) => n.id === 'sayGoodbye');
-    deepStrictEqual(sayGoodbye?.kind, 'lambda');
-    deepStrictEqual(sayGoodbye?.data, {
-      code: 'return `Goodbye, ${name}`;',
+    expect(firstNode.id).toBe('sayHello_0');
+    expect(secondNode.id).toBe('sayGoodbye_1');
+
+    expect(firstNode.next).toBe(secondNode.id);
+    expect(secondNode.next).toBeUndefined();
+
+    expect(firstNode.data).toEqual({
+      name: 'sayHello',
+      description: undefined,
+      memorySize: 128,
+      timeout: 30000,
+    });
+
+    expect(secondNode.data).toEqual({
       name: 'sayGoodbye',
       description: undefined,
       memorySize: 128,
@@ -27,12 +38,9 @@ describe('Lambda call', () => {
     });
   });
 
-  it('should throw an error when decorated methods are not implemented ', () => {
-    throws(
-      () => {
-        new ExecutionGraphBuilder('test/graph/fixtures/NotImplementedHelloWorkflow.ts').build();
-      },
-      { name: 'GraphBuildError', message: 'Method sayHello has no body.' },
+  it('should throw an error when given class is not found', () => {
+    expect(() => new ExecutionGraphBuilder(fixturePath).build('NotFoundClass')).toThrow(
+      `Workflow class NotFoundClass not found in ${fixturePath}`,
     );
   });
 });

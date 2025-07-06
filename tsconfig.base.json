@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2022", // ✅ ECMAScript class fields + decorators
-    "module": "ES2022", // or "NodeNext" if using Node
+    "target": "es5",
+    "module": "commonjs",
+    "lib": ["es2021"],
     "strict": true,
     "declaration": true,
     "composite": true,

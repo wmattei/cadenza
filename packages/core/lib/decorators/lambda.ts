@@ -3,14 +3,6 @@
 import { MetadataRegistry } from '../metadata';
 import { merge } from '../utils/lodashis';
 
-// interface ClassMethodDecoratorContext {
-//   kind: "method";
-//   name: string | symbol;
-//   static: boolean;
-//   private: boolean;
-//   addInitializer(initializer: () => void): void;
-// }
-
 export interface LambdaTaskOptions {
   /**
    * The name of the Lambda function to invoke.
@@ -65,7 +57,7 @@ export function lambda(options: LambdaTaskOptions = {}) {
         workflowClass,
         kind: 'lambda',
         name: context.name.toString(),
-        options: merge(defaultLambdaOptions, options),
+        data: merge(defaultLambdaOptions, options),
       });
     });
   };

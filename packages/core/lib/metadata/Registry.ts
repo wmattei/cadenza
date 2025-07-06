@@ -6,7 +6,7 @@ export interface TaskMetadata {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   workflowClass: Function;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  options: Record<string, any>;
+  data: Record<string, any>;
 }
 
 export class MetadataRegistry {
@@ -24,5 +24,9 @@ export class MetadataRegistry {
 
   static clear() {
     this.taskMap.clear();
+  }
+
+  static isRegistered(clsName: string, taskName: string): boolean {
+    return this.taskMap.get(clsName)?.has(taskName) ?? false;
   }
 }

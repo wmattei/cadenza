@@ -87,3 +87,8 @@ Cadenza is early but fast-moving. Contributions and feedback are welcome.
 ## 🤝 License
 
 MIT
+
+
+
+## TODO
+Check if error during workflow class instantiation is thrown because of code in the constructor.

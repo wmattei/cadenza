@@ -13,10 +13,12 @@
     "lint": {},
     "typecheck": {},
     "test": {
-      "dependsOn": ["^build", "build"]
+      "dependsOn": ["build"]
     },
     "test:watch": {
-      "dependsOn": ["^build", "build"]
+      "dependsOn": [],
+      "cache": false,
+      "persistent": true
     },
     "synth": {
       "dependsOn": ["^build"],

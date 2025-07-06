@@ -8,5 +8,5 @@
     "declarationMap": true,
     "tsBuildInfoFile": "./dist/tsconfig.tsbuildinfo"
   },
-  "include": ["./lib/**/*", "./test/**/*"]
+  "include": ["./**/*"]
 }

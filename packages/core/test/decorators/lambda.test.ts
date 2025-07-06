@@ -37,10 +37,10 @@ describe('@lambda decorator', () => {
     const tasksArray = Array.from(tasks.values());
 
     strictEqual(tasksArray.length, 1);
-    strictEqual(tasksArray[0].options.description, 'Hello world');
-    strictEqual(tasksArray[0].options.memorySize, 512);
-    strictEqual(tasksArray[0].options.name, 'My name');
-    strictEqual(tasksArray[0].options.timeout, 1000);
+    strictEqual(tasksArray[0].data.description, 'Hello world');
+    strictEqual(tasksArray[0].data.memorySize, 512);
+    strictEqual(tasksArray[0].data.name, 'My name');
+    strictEqual(tasksArray[0].data.timeout, 1000);
   });
   it('should register lambda metadata with options defaulting to method name', () => {
     class SampleWorkflow {
@@ -57,9 +57,9 @@ describe('@lambda decorator', () => {
     const tasksArray = Array.from(tasks.values());
 
     strictEqual(tasksArray.length, 1);
-    strictEqual(tasksArray[0].options.description, 'Hello world');
-    strictEqual(tasksArray[0].options.memorySize, 512);
-    strictEqual(tasksArray[0].options.name, 'process');
-    strictEqual(tasksArray[0].options.timeout, 1000);
+    strictEqual(tasksArray[0].data.description, 'Hello world');
+    strictEqual(tasksArray[0].data.memorySize, 512);
+    strictEqual(tasksArray[0].data.name, 'process');
+    strictEqual(tasksArray[0].data.timeout, 1000);
   });
 });

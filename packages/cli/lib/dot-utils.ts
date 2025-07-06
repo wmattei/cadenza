@@ -1,4 +1,3 @@
-import { ExecutionGraph, ExecutionNode } from '@cadenza/compiler';
 
 export function generateDotGraph(graph: ExecutionGraph): string {
   const lines = [`digraph ${graph.workflowName} {`];

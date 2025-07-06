@@ -19,24 +19,10 @@ export class HelloWorkflow extends CadenzaWorkflow<{ name: string }> {
   async run(): Promise<void> {
     await this.sayHello(this.state.name);
     await this.sayGoodbye(this.state.name);
-    // return;
+
     if (1 === 1) {
       await this.sayFoo();
     }
-    // await this.sayFoo();
-    // const hello = await this.sayHello(this.state.name);
-    // if (hello === '123123'){
-    //   await this.sayGoodbye(this.state.name);
-    // }
-    // await this.sayFoo();
-    // if (hello === 'Hello, World!') {
-    //   await this.sayGoodbye(this.state.name);
-    //   if (1 === 1){
-    //     await this.sayFoo();
-    //   }
-    // } else {
-    //   await this.sayGoodbye(this.state.name);
-    // }
   }
 }
 

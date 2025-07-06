@@ -6,13 +6,19 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node --require tsx --test ./test/**/*.test.ts",
-    "test:watch": "node --require tsx --test --watch --test-only ./test/**/*.test.ts"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "packageManager": "yarn@3.5.1",
   "dependencies": {
     "@cadenza/core": "workspace:^",
-    "chalk": "^5.4.1",
+    "chalk": "^4",
     "ts-morph": "^26.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.4",
+    "ts-jest": "^29.4.0",
+    "ts-node": "^10.9.2"
   }
 }
