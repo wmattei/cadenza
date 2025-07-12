@@ -34,9 +34,14 @@ export interface FailNode extends BaseNode {
 
 export interface TaskNode extends BaseNode {
   kind: 'task';
+  type: string;
   name: string;
   data: Record<string, unknown>;
   next?: NodeId;
 }
 
 export type ExecutionNode = StepNode | ChoiceNode | SuccessNode | FailNode | TaskNode;
+
+export function isNextable(node: ExecutionNode): node is StepNode | TaskNode {
+  return node.kind === 'step' || node.kind === 'task';
+}

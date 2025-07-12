@@ -3,7 +3,7 @@ import { ExecutionGraphBuilder } from '@cadenza/compiler';
 import chalk from 'chalk';
 import chokidar from 'chokidar';
 import Fastify from 'fastify';
-// import { generateDotGraph } from './dot-utils';
+import { generateDotGraph } from './dot-utils';
 import { resolve } from 'path';
 
 const entryPath = process.argv[2];
@@ -13,13 +13,14 @@ if (!entryPath) {
   process.exit(1);
 }
 
-// let dot = '';
+let dot = '';
 
 
 const builder = new ExecutionGraphBuilder(resolve(process.cwd(), entryPath));
 async function rebuildGraph() {
   try {
-    builder.build();
+    const graph = builder.build();
+    dot = generateDotGraph(graph);
     console.log(chalk.gray('🔄 Graph rebuilt'));
   } catch (err) {
     console.error(chalk.red('❌ Failed to build graph:'), err);
@@ -33,7 +34,7 @@ chokidar.watch(entryPath).on('change', async () => {
 
 const fastify = Fastify();
 
-// fastify.get('/graph.dot', async () => dot);
+fastify.get('/graph.dot', async () => dot);
 
 fastify.get('/', async (_, reply) => {
   return reply.type('text/html').send(`

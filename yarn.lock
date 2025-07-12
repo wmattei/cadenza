@@ -450,12 +450,7 @@ __metadata:
   resolution: "@cadenza/compiler@workspace:packages/compiler"
   dependencies:
     "@cadenza/core": "workspace:^"
-    "@types/jest": ^30.0.0
     chalk: ^4
-    jest: ^30.0.4
-    ts-jest: ^29.4.0
-    ts-morph: ^26.0.0
-    ts-node: ^10.9.2
   languageName: unknown
   linkType: soft
 
@@ -1310,17 +1305,6 @@ __metadata:
   dependencies:
     "@sinonjs/commons": ^3.0.1
   checksum: b1c6ba87fadb7666d3aa126c9e8b4ac32b2d9e84c9e5fd074aa24cab3c8342fd655459de014b08e603be1e6c24c9f9716d76d6d2a36c50f59bb0091be61601dd
-  languageName: node
-  linkType: hard
-
-"@ts-morph/common@npm:~0.27.0":
-  version: 0.27.0
-  resolution: "@ts-morph/common@npm:0.27.0"
-  dependencies:
-    fast-glob: ^3.3.3
-    minimatch: ^10.0.1
-    path-browserify: ^1.0.1
-  checksum: 0ff68b5d31ca028491e166a809526dd58d253416460e1b32bcae1b837aa4ad97d73ea13d7cfd4132687758fda251e1c30e3af7ba9ad372a71854071f596810ad
   languageName: node
   linkType: hard
 
@@ -2266,6 +2250,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "cadenza@workspace:."
   dependencies:
+    "@types/jest": ^30.0.0
     "@types/node": ^22.15.21
     "@typescript-eslint/eslint-plugin": ^8.32.1
     "@typescript-eslint/parser": ^8.32.1
@@ -2275,7 +2260,10 @@ __metadata:
     eslint-plugin-no-only-tests: ^3.3.0
     eslint-plugin-prettier: ^5.4.0
     eslint-plugin-unused-imports: ^4.1.4
+    jest: ^30.0.4
     prettier: ^3.5.3
+    ts-jest: ^29.4.0
+    ts-node: ^10.9.2
     tsx: ^4.19.4
     turbo: ^2.5.3
     typescript: ^5.8.3
@@ -2419,13 +2407,6 @@ __metadata:
   version: 4.6.0
   resolution: "co@npm:4.6.0"
   checksum: 5210d9223010eb95b29df06a91116f2cf7c8e0748a9013ed853b53f362ea0e822f1e5bb054fb3cefc645239a4cf966af1f6133a3b43f40d591f3b68ed6cf0510
-  languageName: node
-  linkType: hard
-
-"code-block-writer@npm:^13.0.3":
-  version: 13.0.3
-  resolution: "code-block-writer@npm:13.0.3"
-  checksum: 8e234f0ec2db9625d5efb9f05bdae79da6559bb4d9df94a6aa79a89a7b5ae25093b70d309fc5122840c9c07995cb14b4dd3f98a30f8878e3a3372e177df79454
   languageName: node
   linkType: hard
 
@@ -3234,7 +3215,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.3.2, fast-glob@npm:^3.3.3":
+"fast-glob@npm:^3.3.2":
   version: 3.3.3
   resolution: "fast-glob@npm:3.3.3"
   dependencies:
@@ -5020,15 +5001,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minimatch@npm:^10.0.1":
-  version: 10.0.1
-  resolution: "minimatch@npm:10.0.1"
-  dependencies:
-    brace-expansion: ^2.0.1
-  checksum: f5b63c2f30606091a057c5f679b067f84a2cd0ffbd2dbc9143bda850afd353c7be81949ff11ae0c86988f07390eeca64efd7143ee05a0dab37f6c6b38a2ebb6c
-  languageName: node
-  linkType: hard
-
 "minimatch@npm:^3.0.4, minimatch@npm:^3.1.1, minimatch@npm:^3.1.2":
   version: 3.1.2
   resolution: "minimatch@npm:3.1.2"
@@ -5427,13 +5399,6 @@ __metadata:
     json-parse-even-better-errors: ^2.3.0
     lines-and-columns: ^1.1.6
   checksum: 62085b17d64da57f40f6afc2ac1f4d95def18c4323577e1eced571db75d9ab59b297d1d10582920f84b15985cbfc6b6d450ccbf317644cfa176f3ed982ad87e2
-  languageName: node
-  linkType: hard
-
-"path-browserify@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "path-browserify@npm:1.0.1"
-  checksum: c6d7fa376423fe35b95b2d67990060c3ee304fc815ff0a2dc1c6c3cfaff2bd0d572ee67e18f19d0ea3bbe32e8add2a05021132ac40509416459fffee35200699
   languageName: node
   linkType: hard
 
@@ -6409,16 +6374,6 @@ __metadata:
   bin:
     ts-jest: cli.js
   checksum: 4083840a71c89fa41a75afd8a48329e9138bc2856ce86fe0de4f25b9417bbd1595d5fa18c9f6fa77161629a2cabcaf6ed9db8f5441c6890a466cc62da4ba8da4
-  languageName: node
-  linkType: hard
-
-"ts-morph@npm:^26.0.0":
-  version: 26.0.0
-  resolution: "ts-morph@npm:26.0.0"
-  dependencies:
-    "@ts-morph/common": ~0.27.0
-    code-block-writer: ^13.0.3
-  checksum: b2021786e017cdaa237263433f16a627a6332bb5905d6e3a65513c1848b19f8778a0d7c51aceae870e4ea07efa1e49b24590b21e4da9d970348c07f70183db2a
   languageName: node
   linkType: hard
 

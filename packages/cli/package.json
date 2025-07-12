@@ -8,8 +8,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node --require tsx --watch lib/index.ts",
-    "typecheck": "tsc --noEmit",
-    "test": "node --require tsx --test ./test/**/*.test.ts"
+    "typecheck": "tsc --noEmit"
   },
   "packageManager": "yarn@3.5.1",
   "dependencies": {

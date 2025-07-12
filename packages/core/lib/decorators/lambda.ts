@@ -55,7 +55,7 @@ export function lambda(options: LambdaTaskOptions = {}) {
 
       MetadataRegistry.registerTask({
         workflowClass,
-        kind: 'lambda',
+        type: 'lambda',
         name: context.name.toString(),
         data: merge(defaultLambdaOptions, options),
       });

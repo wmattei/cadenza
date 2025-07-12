@@ -1,30 +1,30 @@
+import { ExecutionGraph, isNextable } from '@cadenza/compiler';
 
 export function generateDotGraph(graph: ExecutionGraph): string {
   const lines = [`digraph ${graph.workflowName} {`];
-  const visited = new Set<string>();
 
-  function visit(node: ExecutionNode) {
-    if (visited.has(node.path.join(''))) return;
-    visited.add(node.path.join(''));
+  for (const node of graph.nodes) {
+    if (node.kind === 'task') {
+      lines.push(`  ${node.id} [label="${node.name}"];`);
+    }
 
-    lines.push(`  ${node.path.join('')} [label="${node.kind}\\n${node.kind}"];`);
-
-    if (node.isChoice()) {
-      for (const branch of node.data.branches || []) {
-        lines.push(
-          `  ${node.path.join('')} -> ${branch.next.path.join('')} [label="${branch.condition === 'default' ? 'default' : branch.condition}"];`,
-        );
-        visit(branch.next);
-      }
-    } else {
-      if (node.next) {
-        lines.push(`  ${node.path.join('')} -> ${node.next?.path.join('')};`);
-        visit(node.next!);
+    if (node.kind === 'choice') {
+      lines.push(`  ${node.id} [label="Choice (${node.condition})"];`);
+      lines.push(`  ${node.id} -> ${node.trueBranch} [label="true"];`);
+      if (node.falseBranch) {
+        lines.push(`  ${node.id} -> ${node.falseBranch} [label="false"];`);
       }
     }
-  }
 
-  visit(graph.root!);
+    if (node.kind === 'step') {
+      lines.push(`  ${node.id} [label="Step"];`);
+    }
+
+    // Handle nextable nodes
+    if (isNextable(node) && node.next) {
+      lines.push(`  ${node.id} -> ${node.next};`);
+    }
+  }
 
   lines.push('}');
   return lines.join('\n');

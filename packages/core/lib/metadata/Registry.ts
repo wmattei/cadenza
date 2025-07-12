@@ -1,8 +1,8 @@
-export type TaskMetadataKind = 'lambda';
+export type TaskMetadataType = 'lambda';
 
 export interface TaskMetadata {
   name: string;
-  kind: TaskMetadataKind;
+  type: TaskMetadataType;
   // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
   workflowClass: Function;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

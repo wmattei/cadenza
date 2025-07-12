@@ -12,13 +12,6 @@
   "packageManager": "yarn@3.5.1",
   "dependencies": {
     "@cadenza/core": "workspace:^",
-    "chalk": "^4",
-    "ts-morph": "^26.0.0"
-  },
-  "devDependencies": {
-    "@types/jest": "^30.0.0",
-    "jest": "^30.0.4",
-    "ts-jest": "^29.4.0",
-    "ts-node": "^10.9.2"
+    "chalk": "^4"
   }
 }

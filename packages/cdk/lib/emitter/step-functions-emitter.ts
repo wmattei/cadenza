@@ -1,4 +1,4 @@
-import { CadenzaEmitter, ExecutionGraph } from '@cadenza/compiler';
+import { CadenzaEmitter, ExecutionGraph, isNextable } from '@cadenza/compiler';
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions';
 import { Construct } from 'constructs';
 
@@ -15,22 +15,29 @@ export class StepFunctionsEmitter implements CadenzaEmitter {
   }
 
   emit(graph: ExecutionGraph): sfn.StateMachine {
-    const states: Record<string, sfn.INextable & sfn.IChainable> = {};
+    const states: Record<string, sfn.IChainable> = {};
 
     for (const node of graph.nodes) {
-      const emitter = NodeEmitterRegistry.get(node.kind);
-      states[node.id] = emitter.emit(this.scope, node);
+      if (node.kind === 'task') {
+        const emitter = NodeEmitterRegistry.get(node.type);
+        states[node.id] = emitter.emit(this.scope, node);
+      }
+
+      if (node.kind === 'choice') {
+        const choice = new sfn.Choice(this.scope, node.id, {});
+        states[node.id] = choice;
+      }
     }
 
     const wired = new Set<string>();
 
     for (const node of graph.nodes) {
-      if (node.next) {
-        const nextNode = states[node.next.id];
+      if (isNextable(node) && node.next) {
+        const nextNode = states[node.next];
         if (!nextNode) {
           throw new Error(`Next node ${node.next} not found for node ${node.id}`);
         }
-        states[node.id].next(nextNode);
+        (states[node.id] as sfn.INextable & sfn.IChainable).next(nextNode);
         wired.add(node.id);
       }
     }

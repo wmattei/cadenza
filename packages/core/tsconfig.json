@@ -9,5 +9,5 @@
     "experimentalDecorators": false,
     "useDefineForClassFields": true
   },
-  "include": ["./lib/**/*", "./test/**/*"]
+  "include": ["./**/*"]
 }

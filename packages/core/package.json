@@ -6,7 +6,8 @@
     "build": "tsc -p tsconfig.json",
     "dev": "tsc -p tsconfig.json --watch",
     "typecheck": "tsc --noEmit",
-    "test": "node --require tsx --test ./test/**/*.test.ts"
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "packageManager": "yarn@3.5.1"
 }

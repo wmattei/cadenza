@@ -1,6 +1,3 @@
-import { strictEqual } from 'assert';
-import { beforeEach, describe, it } from 'node:test';
-
 import { lambda } from '../../lib/decorators';
 import { MetadataRegistry } from '../../lib/metadata';
 
@@ -14,12 +11,14 @@ describe('@lambda decorator', () => {
       @lambda() process() {}
     }
 
+    new SampleWorkflow();
+
     const tasks = MetadataRegistry.getTasksForWorkflow(SampleWorkflow.name);
 
     const tasksArray = Array.from(tasks.values());
 
-    strictEqual(tasksArray.length, 1);
-    strictEqual(tasksArray[0].kind, 'lambda');
+    expect(tasksArray.length).toBe(1);
+    expect(tasksArray[0].type).toBe('lambda');
   });
   it('should register lambda metadata with options', () => {
     class SampleWorkflow {
@@ -31,16 +30,17 @@ describe('@lambda decorator', () => {
       })
       process() {}
     }
+    new SampleWorkflow();
 
     const tasks = MetadataRegistry.getTasksForWorkflow(SampleWorkflow.name);
 
     const tasksArray = Array.from(tasks.values());
 
-    strictEqual(tasksArray.length, 1);
-    strictEqual(tasksArray[0].data.description, 'Hello world');
-    strictEqual(tasksArray[0].data.memorySize, 512);
-    strictEqual(tasksArray[0].data.name, 'My name');
-    strictEqual(tasksArray[0].data.timeout, 1000);
+    expect(tasksArray.length).toBe(1);
+    expect(tasksArray[0].data.description).toBe('Hello world');
+    expect(tasksArray[0].data.memorySize).toBe(512);
+    expect(tasksArray[0].data.name).toBe('My name');
+    expect(tasksArray[0].data.timeout).toBe(1000);
   });
   it('should register lambda metadata with options defaulting to method name', () => {
     class SampleWorkflow {
@@ -51,15 +51,16 @@ describe('@lambda decorator', () => {
       })
       process() {}
     }
+    new SampleWorkflow();
 
     const tasks = MetadataRegistry.getTasksForWorkflow(SampleWorkflow.name);
 
     const tasksArray = Array.from(tasks.values());
 
-    strictEqual(tasksArray.length, 1);
-    strictEqual(tasksArray[0].data.description, 'Hello world');
-    strictEqual(tasksArray[0].data.memorySize, 512);
-    strictEqual(tasksArray[0].data.name, 'process');
-    strictEqual(tasksArray[0].data.timeout, 1000);
+    expect(tasksArray.length).toBe(1);
+    expect(tasksArray[0].data.description).toBe('Hello world');
+    expect(tasksArray[0].data.memorySize).toBe(512);
+    expect(tasksArray[0].data.name).toBe('process');
+    expect(tasksArray[0].data.timeout).toBe(1000);
   });
 });

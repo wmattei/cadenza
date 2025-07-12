@@ -175,9 +175,11 @@ export class ExecutionGraphBuilder {
 
         const tasks = MetadataRegistry.getTasksForWorkflow(this.workflowClass!.name!.text);
         if (tasks.has(methodName)) {
+          const task = tasks.get(methodName)!;
           this.graph.push({
             id,
             kind: 'task',
+            type: task.type,
             name: methodName,
             data: tasks.get(methodName)!.data,
           });
