@@ -7,7 +7,7 @@ export type NodeId = string;
 
 export interface BaseNode {
   id: NodeId;
-  kind: 'choice' | 'success' | 'fail' | 'step' | 'task';
+  kind: 'choice' | 'success' | 'fail' | 'step' | 'task' | 'pass';
 }
 
 export interface StepNode extends BaseNode {
@@ -20,7 +20,8 @@ export interface ChoiceNode extends BaseNode {
   kind: 'choice';
   condition: string;
   trueBranch: NodeId;
-  falseBranch: NodeId;
+  falseBranch?: NodeId;
+  next?: NodeId;
 }
 
 export interface SuccessNode extends BaseNode {
@@ -40,8 +41,12 @@ export interface TaskNode extends BaseNode {
   next?: NodeId;
 }
 
-export type ExecutionNode = StepNode | ChoiceNode | SuccessNode | FailNode | TaskNode;
+export interface PassNode extends BaseNode {
+  kind: 'pass';
+}
+
+export type ExecutionNode = StepNode | ChoiceNode | SuccessNode | FailNode | TaskNode | PassNode;
 
 export function isNextable(node: ExecutionNode): node is StepNode | TaskNode {
-  return node.kind === 'step' || node.kind === 'task';
+  return node.kind === 'step' || node.kind === 'task' || node.kind === 'pass';
 }

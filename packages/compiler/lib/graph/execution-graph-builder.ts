@@ -1,36 +1,33 @@
 import { MetadataRegistry } from '@cadenza/core';
 import { join } from 'path';
 import ts from 'typescript';
-import { ExecutionGraph, ExecutionNode, StepNode, TaskNode } from './models';
+import { ExecutionGraph, ExecutionNode, StepNode, TaskNode, ChoiceNode } from './models';
 
 export class ExecutionGraphBuilder {
   private idCounter = 0;
   private graph: ExecutionNode[] = [];
   private sourceFile: ts.SourceFile;
-
-  private runMethod: ts.MethodDeclaration | undefined;
-  private workflowClass: ts.ClassDeclaration | undefined;
+  private runMethod?: ts.MethodDeclaration;
+  private workflowClass?: ts.ClassDeclaration;
 
   constructor(private entry: string) {
     const program = ts.createProgram([this.entry], {});
     const sourceFile = program.getSourceFile(this.entry);
-    if (!sourceFile) {
-      throw new Error(`Source file ${this.entry} not found`);
-    }
+    if (!sourceFile) throw new Error(`Source file ${this.entry} not found`);
     this.sourceFile = sourceFile;
   }
 
   build(className?: string): ExecutionGraph {
     this.workflowClass = this.findWorkflowClass(className);
     if (!this.workflowClass) {
-      if (className) {
-        throw new Error(`Workflow class ${className} not found in ${this.entry}`);
-      }
-      throw new Error(`No class was found in ${this.entry}`);
+      throw new Error(
+        className
+          ? `Workflow class ${className} not found in ${this.entry}`
+          : `No class was found in ${this.entry}`,
+      );
     }
 
-    this.loadWorkflowClass();
-
+    this.loadWorkflowClass(); // Triggers decorator metadata registration
     return {
       workflowName: this.workflowClass.name!.text,
       nodes: this.graph,
@@ -39,173 +36,154 @@ export class ExecutionGraphBuilder {
 
   private loadWorkflowClass() {
     try {
-      // Ensure the workflow entry is loaded so that the metadata is registered
+      const className = this.workflowClass!.name!.text;
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      new (require(join(this.entry))[this.workflowClass!.name!.text])();
+      new (require(join(this.entry))[className])();
       this.extractRunMethod(this.workflowClass!);
     } catch (error) {
-      throw new Error(`Failed to load workflow class ${this.workflowClass!.name!.text}: ${error}`);
+      throw new Error(`Failed to load workflow class: ${error}`);
     }
   }
 
-  private findWorkflowClass(className?: string): ts.ClassDeclaration | undefined {
-    let workflowClass: ts.ClassDeclaration | undefined;
+  private findWorkflowClass(name?: string): ts.ClassDeclaration | undefined {
+    let found: ts.ClassDeclaration | undefined;
     ts.forEachChild(this.sourceFile, (node) => {
-      if (!ts.isClassDeclaration(node)) return;
-      if (!!workflowClass) return;
-
-      // If the class name is not provided, we use the first class we find
-      if (!className) {
-        workflowClass = node;
-        return;
-      }
-
-      // If the class name is provided, we use the class that matches the name
-      if (node.name?.text === className) {
-        workflowClass = node;
-        return;
+      if (ts.isClassDeclaration(node) && (!name || node.name?.text === name)) {
+        found = node;
       }
     });
-
-    return workflowClass;
+    return found;
   }
 
   private extractRunMethod(classNode: ts.ClassDeclaration) {
-    if (this.runMethod) {
-      return;
-    }
-
     for (const member of classNode.members) {
       if (
         ts.isMethodDeclaration(member) &&
-        member.name &&
         ts.isIdentifier(member.name) &&
         member.name.text === 'run' &&
         member.body
       ) {
         this.visit(member.body);
+        break;
       }
     }
   }
 
-  private visit(node: ts.Node): { first: string; last: string } | undefined {
-    if (ts.isIfStatement(node)) {
-      const id = this.genId('choice');
-      const condition = node.expression.getText(this.sourceFile);
-
-      const trueBranch = this.visit(node.thenStatement);
-      const falseBranch = node.elseStatement ? this.visit(node.elseStatement) : undefined;
-
-      const trueId = trueBranch?.first ?? this.genId();
-      const falseId = falseBranch?.first ?? this.genId();
-
-      this.graph.push({
-        id,
-        kind: 'choice',
-        condition,
-        trueBranch: trueId,
-        falseBranch: falseId,
-      });
-
-      // Return the last node of the longer branch, or just the choice node itself
-      return {
-        first: id,
-        last: falseBranch?.last ?? trueBranch?.last ?? id,
-      };
-    }
-
-    if (ts.isThrowStatement(node)) {
-      const id = this.genId();
-      this.graph.push({
-        id,
-        kind: 'fail',
-        error: node.expression?.getText(this.sourceFile),
-      });
-      return { first: id, last: id };
-    }
-
-    if (ts.isReturnStatement(node)) {
-      const id = this.genId('success');
-      this.graph.push({
-        id,
-        kind: 'success',
-      });
-      return { first: id, last: id };
-    }
-
-    if (ts.isBlock(node)) {
-      let firstId: string | undefined;
-      let prevId: string | undefined;
-
-      for (const stmt of node.statements) {
-        const result = this.visit(stmt);
-        if (!result) continue;
-
-        if (!firstId) firstId = result.first;
-
-        if (prevId) {
-          const prevNode = this.graph.find((n) => n.id === prevId && isLinkableNode(n)) as StepNode;
-          if (prevNode) prevNode.next = result.first;
-        }
-
-        prevId = result.last;
-      }
-
-      if (firstId && prevId) return { first: firstId, last: prevId };
-      return undefined;
-    }
-
-    if (ts.isExpressionStatement(node)) {
-      let callExpr: ts.CallExpression | undefined;
-
-      if (ts.isCallExpression(node.expression)) {
-        callExpr = node.expression;
-      } else if (
-        ts.isAwaitExpression(node.expression) &&
-        ts.isCallExpression(node.expression.expression)
-      ) {
-        callExpr = node.expression.expression;
-      }
-
-      if (callExpr && ts.isPropertyAccessExpression(callExpr.expression)) {
-        const propAccess = callExpr.expression;
-
-        const methodName = propAccess.name.text;
-        const id = this.genId(methodName);
-
-        const tasks = MetadataRegistry.getTasksForWorkflow(this.workflowClass!.name!.text);
-        if (tasks.has(methodName)) {
-          const task = tasks.get(methodName)!;
-          this.graph.push({
-            id,
-            kind: 'task',
-            type: task.type,
-            name: methodName,
-            data: tasks.get(methodName)!.data,
-          });
-          return { first: id, last: id };
-        }
-      }
-    }
-
-    if (ts.isExpressionStatement(node) || ts.isVariableStatement(node)) {
-      const id = this.genId();
-      this.graph.push({
-        id,
-        kind: 'step',
-        description: node.getText(this.sourceFile),
-      });
-      return { first: id, last: id };
-    }
-
+  private visit(node: ts.Node): { first: string; last: string[] } | undefined {
+    if (ts.isIfStatement(node)) return this.visitIfStatement(node);
+    if (ts.isThrowStatement(node))
+      return this.emitNode('fail', node.expression?.getText(this.sourceFile));
+    if (ts.isReturnStatement(node)) return this.emitNode('success');
+    if (ts.isBlock(node)) return this.visitBlock(node);
+    if (ts.isExpressionStatement(node)) return this.visitExpression(node);
+    if (ts.isVariableStatement(node)) return this.emitStep(node);
     return undefined;
   }
 
-  private genId(name?: string): string {
-    return `${name ?? 'node'}_${this.idCounter++}`;
-  }
-}
+  private visitIfStatement(node: ts.IfStatement): { first: string; last: string[] } {
+    const id = this.genId('choice');
+    const condition = node.expression.getText(this.sourceFile);
 
-function isLinkableNode(node: ExecutionNode): node is StepNode | TaskNode {
-  return node.kind === 'step' || node.kind === 'task';
+    const trueBranch = this.visit(node.thenStatement);
+    const falseBranch = node.elseStatement ? this.visit(node.elseStatement) : undefined;
+
+    const trueId = trueBranch?.first ?? this.pass();
+    const falseId = falseBranch?.first ?? this.pass();
+
+    this.graph.push({
+      id,
+      kind: 'choice',
+      condition,
+      trueBranch: trueId,
+      falseBranch: falseId,
+    });
+
+    const terminalNodes = [...(trueBranch?.last ?? []), ...(falseBranch?.last ?? [falseId])];
+
+    return { first: id, last: terminalNodes };
+  }
+
+  private visitBlock(node: ts.Block): { first: string; last: string[] } | undefined {
+    let firstId: string | undefined;
+    let prevIds: string[] = [];
+
+    for (const stmt of node.statements) {
+      const result = this.visit(stmt);
+      if (!result) continue;
+
+      if (!firstId) firstId = result.first;
+      this.connectNodes(prevIds, result.first);
+      prevIds = result.last;
+    }
+
+    return firstId ? { first: firstId, last: prevIds } : undefined;
+  }
+
+  private visitExpression(
+    node: ts.ExpressionStatement,
+  ): { first: string; last: string[] } | undefined {
+    const callExpr = this.unwrapCallExpression(node.expression);
+    if (!callExpr || !ts.isPropertyAccessExpression(callExpr.expression))
+      return this.emitStep(node);
+
+    const methodName = callExpr.expression.name.text;
+    const tasks = MetadataRegistry.getTasksForWorkflow(this.workflowClass!.name!.text);
+    if (!tasks.has(methodName)) return this.emitStep(node);
+
+    const id = this.genId(methodName);
+    const task = tasks.get(methodName)!;
+
+    this.graph.push({
+      id,
+      kind: 'task',
+      name: methodName,
+      type: task.type,
+      data: task.data,
+    });
+
+    return { first: id, last: [id] };
+  }
+
+  private emitStep(node: ts.Node): { first: string; last: string[] } {
+    const id = this.genId('step');
+    this.graph.push({
+      id,
+      kind: 'step',
+      description: node.getText(this.sourceFile),
+    });
+    return { first: id, last: [id] };
+  }
+
+  private emitNode(kind: 'fail' | 'success', error?: string): { first: string; last: string[] } {
+    const id = this.genId(kind);
+    this.graph.push({ id, kind, ...(error ? { error } : {}) });
+    return { first: id, last: [id] };
+  }
+
+  private connectNodes(fromIds: string[], toId: string) {
+    for (const fromId of fromIds) {
+      const node = this.findGraphNode<StepNode | TaskNode | ChoiceNode>(fromId);
+      if (node) node.next = toId;
+    }
+  }
+
+  private unwrapCallExpression(expr: ts.Expression): ts.CallExpression | undefined {
+    if (ts.isCallExpression(expr)) return expr;
+    if (ts.isAwaitExpression(expr) && ts.isCallExpression(expr.expression)) return expr.expression;
+    return undefined;
+  }
+
+  private genId(label?: string): string {
+    return `${label ?? 'node'}_${this.idCounter++}`;
+  }
+
+  private pass(): string {
+    const id = this.genId('pass');
+    this.graph.push({ id, kind: 'pass' });
+    return id;
+  }
+
+  private findGraphNode<T extends ExecutionNode>(id: string): T | undefined {
+    return this.graph.find((n) => n.id === id) as T | undefined;
+  }
 }
